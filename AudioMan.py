@@ -1,66 +1,79 @@
 import tkinter as tk
 from tkinter import messagebox
 
+
 def generate_paths():
-    """Genera las rutas concatenadas a partir del texto pegado y la extensión."""
+    """Generate concatenated paths from the input columns and extension."""
     try:
-        column1_text = column1_textbox.get("1.0", tk.END).strip().splitlines()
-        column2_text = column2_textbox.get("1.0", tk.END).strip().splitlines()
+        # Collect text from all column textboxes
+        columns = [col.get("1.0", tk.END).strip().splitlines() for col in column_textboxes]
         extension = extension_entry.get().strip()
 
-        if not column1_text or not column2_text:
-            messagebox.showwarning("Warning", "Both colums have to have data.")
+        # Check for empty columns or mismatched row counts
+        if not all(columns):
+            messagebox.showwarning("Warning", "All columns must have data.")
             return
-        if len(column1_text) != len(column2_text):
-            messagebox.showwarning("Warning", "Both colums have to have same number of rows.")
+        if len(set(len(col) for col in columns)) != 1:
+            messagebox.showwarning("Warning", "All columns must have the same number of rows.")
             return
         if not extension:
             messagebox.showwarning("Warning", "Introduce an extension.")
             return
 
-        # Generar las rutas concatenadas
-        concatenated_paths = [
-            f"{col1}{col2}{extension}"
-            for col1, col2 in zip(column1_text, column2_text)
-        ]
+        # Generate the concatenated paths
+        concatenated_paths = ["".join(row) + extension for row in zip(*columns)]
 
-        # Mostrar el resultado en el cuadro de texto
+        # Display the result in the textbox
         result_textbox.delete("1.0", tk.END)
         result_textbox.insert(tk.END, "\n".join(concatenated_paths))
     except Exception as e:
-        messagebox.showerror("Warning", f"Not possible to create path: {e}")
+        messagebox.showerror("Error", f"Not possible to create paths: {e}")
 
-# Configuración de la ventana principal
+
+def add_column():
+    """Add a new column dynamically."""
+    column_number = len(column_textboxes) + 1
+    new_label = tk.Label(margin_frame, text=f"Col {column_number}:")
+    new_label.grid(row=1, column=column_number - 1, sticky="w", padx=5)
+    new_textbox = tk.Text(margin_frame, height=10, width=20)
+    new_textbox.grid(row=2, column=column_number - 1, sticky="w", padx=5)
+    column_textboxes.append(new_textbox)
+
+
+# Main window configuration
 root = tk.Tk()
-root.title("BATMAN like")
-root.geometry("800x600")
+root.title("Dynamic Columns Generator")
+root.geometry("900x600")
 
-# Entrada para la primera columna
-column1_label = tk.Label(root, text="Where it is:")
-column1_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
-column1_textbox = tk.Text(root, height=10, width=40)
-column1_textbox.grid(row=1, column=0, padx=10, pady=5)
+# Create a frame to act as a margin
+margin_frame = tk.Frame(root, padx=20, pady=20)
+margin_frame.pack(fill="both", expand=True)
 
-# Entrada para la segunda columna
-column2_label = tk.Label(root, text="Who is it:")
-column2_label.grid(row=0, column=1, padx=10, pady=5, sticky="w")
-column2_textbox = tk.Text(root, height=10, width=40)
-column2_textbox.grid(row=1, column=1, padx=10, pady=5)
+# Dynamic column storage
+column_textboxes = []
 
-# Entrada para la extensión
-extension_label = tk.Label(root, text="Extension (e.g., .wav):")
-extension_label.grid(row=2, column=0, padx=10, pady=5, sticky="w")
-extension_entry = tk.Entry(root)
-extension_entry.grid(row=2, column=1, padx=10, pady=5)
+# Add the first two columns
+for i in range(2):
+    add_column()
 
-# Botón para generar rutas
-generate_button = tk.Button(root, text="Concatenate", command=generate_paths)
-generate_button.grid(row=3, column=0, columnspan=2, pady=10)
+# Button to add more columns
+add_column_button = tk.Button(margin_frame, text="Add Column", command=add_column)
+add_column_button.grid(row=0, column=0, padx=5, pady=10, sticky="w")
 
-# Área de resultados
-result_label = tk.Label(root, text="Result:")
-result_label.grid(row=4, column=0, columnspan=2, padx=10, pady=5, sticky="w")
-result_textbox = tk.Text(root, height=10, width=80)
-result_textbox.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
+# Extension input
+extension_label = tk.Label(margin_frame, text="Extension (e.g., .wav):")
+extension_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+extension_entry = tk.Entry(margin_frame)
+extension_entry.grid(row=3, column=1, padx=5, pady=5)
+
+# Button to generate paths
+generate_button = tk.Button(margin_frame, text="Generate Paths", command=generate_paths)
+generate_button.grid(row=4, column=1, padx=5, pady=10, sticky="w")
+
+# Result area
+result_label = tk.Label(margin_frame, text="Result:")
+result_label.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="w")
+result_textbox = tk.Text(margin_frame, height=10, width=80)
+result_textbox.grid(row=5, column=0, columnspan=10, padx=5, pady=5)
 
 root.mainloop()
