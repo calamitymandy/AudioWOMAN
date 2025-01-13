@@ -54,8 +54,8 @@ def add_column():
     column_labels.append(new_label)
 
     # Add a textbox for the column
-    new_textbox = tk.Text(margin_frame, height=10, width=10)
-    new_textbox.grid(row=4, column=column_number - 1, sticky="w", padx=5)
+    new_textbox = tk.Text(margin_frame, height=10, width=20)
+    new_textbox.grid(row=4, column=column_number -1, sticky="w", padx=5)
     column_textboxes.append(new_textbox)
 
     # Update the ID column selector options
@@ -96,8 +96,8 @@ def update_id_column_label(event):
 
 # Main window configuration
 root = tk.Tk()
-root.title("Dynamic Columns Generator")
-root.geometry("900x600")
+root.title("Batman like")
+root.geometry("900x900")
 
 # Create a frame to act as a margin
 margin_frame = tk.Frame(root, padx=20, pady=20)
@@ -108,11 +108,11 @@ column_textboxes = []
 column_labels = []
 
 # ID column selector
-id_column_label = tk.Label(margin_frame, text="ID:")
-id_column_label.grid(row=1, column=0, padx=5, pady=5, sticky="w")
+id_column_label = tk.Label(margin_frame, text="ID col:")
+id_column_label.grid(row=0, column=1, padx=5, pady=5, sticky="e")
 
 id_column_selector = ttk.Combobox(margin_frame, state="readonly")
-id_column_selector.grid(row=1, column=0, padx=30, pady=20)
+id_column_selector.grid(row=0, column=2, padx=5, pady=5, columnspan=1, sticky="w")
 
 # Set placeholder text for the ID column selector
 id_column_selector.set("Select ID Column")
@@ -125,30 +125,30 @@ for _ in range(2):
 
 # Button to add more columns
 add_column_button = tk.Button(margin_frame, text="Add Column", command=add_column)
-add_column_button.grid(row=0, column=0, padx=5, pady=10, sticky="w")
+add_column_button.grid(row=0, column=0, padx=5, pady=5, sticky="w")
 
 # Button to remove the last column
 remove_column_button = tk.Button(margin_frame, text="Remove Column", command=remove_column)
-remove_column_button.grid(row=0, column=1, padx=0, pady=10, sticky="w")
+remove_column_button.grid(row=0, column=1, padx=0, pady=5, sticky="w")
 
 # Extension input
-extension_label = tk.Label(margin_frame, text="Extension (e.g., .wav):")
-extension_label.grid(row=1, column=1, padx=5, pady=5, sticky="w")
+extension_label = tk.Label(margin_frame, text="Extension (ex: .wav):")
+extension_label.grid(row=0, column=4, padx=5, pady=5, sticky="e")
 extension_entry = tk.Entry(margin_frame)
-extension_entry.grid(row=1, column=2, padx=5, pady=5)
+extension_entry.grid(row=0, column=5, padx=5, pady=5, sticky="w")
 
 # Button to generate paths
 generate_button = tk.Button(margin_frame, text="Generate Paths", command=generate_paths)
-generate_button.grid(row=5, column=1, padx=5, pady=10, sticky="w")
+generate_button.grid(row=5, columnspan=5, padx=5, pady=10)
 
 # Result area
 result_label = tk.Label(margin_frame, text="Result:")
-result_label.grid(row=6, column=0, columnspan=2, padx=5, pady=5, sticky="w")
+result_label.grid(row=6, column=0, padx=5, pady=5, sticky="w")
 result_textbox = tk.Text(margin_frame, height=10, width=80)
-result_textbox.grid(row=7, column=0, columnspan=15, padx=5, pady=5, sticky="w")
+result_textbox.grid(row=7, columnspan=6, padx=5, pady=5, sticky="w")
 
 # Configure columns to expand only the textboxes
-for i in range(2, 10):  # Assuming up to 10 columns
-    margin_frame.grid_columnconfigure(i, weight=1, uniform="equal")
+#for i in range(2, 10):  # Assuming up to 10 columns
+#    margin_frame.grid_columnconfigure(i, weight=1, uniform="same_group")
 
 root.mainloop()
