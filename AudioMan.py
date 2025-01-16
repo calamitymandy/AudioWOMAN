@@ -62,7 +62,6 @@ def update_generate_button_position():
     # Update the button position (between columns and result area)
     generate_button.grid(row=button_row, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
 
-
 def add_column():
     """Add a new column dynamically."""
     column_number = len(column_textboxes) + 1
@@ -209,6 +208,7 @@ id_column_selector.set("Select ID Column")
 id_column_selector['values'] = []  # Initialize empty
 id_column_selector.bind("<<ComboboxSelected>>", update_id_column_label)
 
+## EXTENSION BOX ##
 # Extension box placeholder function
 def set_placeholder(entry, placeholder, color="gray"):
     """Set placeholder text in an entry widget."""
@@ -228,45 +228,108 @@ def set_placeholder(entry, placeholder, color="gray"):
     entry.bind("<FocusIn>", on_focus_in)
     entry.bind("<FocusOut>", on_focus_out)
 
-# Extension box
+# Extension entry #
 extension_entry = tk.Entry(nav_bar)
 extension_entry.grid(row=0, column=3, padx=5, pady=5)
 
 # Set placeholder for the extension_entry
 set_placeholder(extension_entry, "Extension (ex: .wav)")
 
-# Clear data button
+## CLEAR DATA BUTTON ##
 clear_button = tk.Button(nav_bar, text="Clear", command=clear_all, bg="#f71e6c", fg="black")
 clear_button.grid(row=0, column=5, padx=5, pady=5, rowspan=2)
 
-# Content frame (Below Navigation Bar)
-content_frame = tk.Frame(root, padx=20, pady=20, bg="#ebb970")
-content_frame.grid(row=1, column=0, sticky="nsew")
+## CONTENT FRAME WITH SCROLLBARS ##
+# Create a container frame for the canvas and scrollbars
+content_container = tk.Frame(root, bg="#ebb970")
+content_container.grid(row=1, column=0, sticky="nsew")  # Same position as the content frame
 
-# Configure content frame for a maximum of 6 columns
+# Add a canvas to the container
+canvas = tk.Canvas(content_container, bg="#ebb970")
+canvas.grid(row=0, column=0, sticky="nsew")
+
+# Add vertical and horizontal scrollbars
+v_scrollbar = tk.Scrollbar(content_container, orient="vertical", command=canvas.yview)
+v_scrollbar.grid(row=0, column=1, sticky="ns")
+
+h_scrollbar = tk.Scrollbar(content_container, orient="horizontal", command=canvas.xview)
+h_scrollbar.grid(row=1, column=0, sticky="ew")
+
+# Configure the canvas to use the scrollbars
+canvas.configure(yscrollcommand=v_scrollbar.set, xscrollcommand=h_scrollbar.set)
+
+# Create the actual content frame inside the canvas
+content_frame = tk.Frame(canvas, padx=20, pady=20, bg="#ebb970")
+content_frame_id = canvas.create_window((0, 0), window=content_frame, anchor="nw")
+
+# Configure resizing behavior for the content_container
+content_container.grid_rowconfigure(0, weight=1)
+content_container.grid_columnconfigure(0, weight=1)
+
+# Bind the canvas and content frame for scrolling
+def on_canvas_configure(event):
+    """Update the scroll region of the canvas when the content frame changes size."""
+    canvas.configure(scrollregion=canvas.bbox("all"))
+
+content_frame.bind("<Configure>", on_canvas_configure)
+
+# Optional: Handle resizing of the canvas
+def on_content_resize(event):
+    """Resize the canvas to fill the container."""
+    canvas_width = event.width
+    canvas.itemconfig(content_frame_id, width=canvas_width)
+
+canvas.bind("<Configure>", on_content_resize)
+
+# Enable mouse wheel scrolling for the canvas
+def on_mouse_wheel(event):
+    """Scroll vertically with the mouse wheel."""
+    canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+canvas.bind_all("<MouseWheel>", on_mouse_wheel)  # For Windows and MacOS
+canvas.bind_all("<Button-4>", lambda e: canvas.yview_scroll(-1, "units"))  # For Linux
+canvas.bind_all("<Button-5>", lambda e: canvas.yview_scroll(1, "units"))  # For Linux
+
+# Configure the content frame for a maximum of 6 columns
 for col in range(6):
     content_frame.grid_columnconfigure(col, weight=1, uniform="fixed_columns")
 
-# Configure dynamic row storage
+## Configure dynamic row storage ##
 column_textboxes = []
 column_labels = []
 
-# Button to generate paths
+## Button to generate paths ##
 generate_button = tk.Button(content_frame, text="Generate Paths", command=generate_paths, bg="#f07868")
 generate_button.grid(row=4, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
 
-# Add the first two columns
+## Add the first two columns ##
 for _ in range(2):
     add_column()
 
-# Result area
+## RESULT AREA WITH SCROLLBAR ##
 result_label = tk.Label(content_frame, text="Result:", bg="#e7d3b0")
 result_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
 
-result_textbox = tk.Text(content_frame, height=10, width=100, bg="#e7d3b0")
-result_textbox.grid(row=6, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
+# Create a frame for the result area and scrollbar
+result_frame = tk.Frame(content_frame, bg="#e7d3b0")
+result_frame.grid(row=6, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
-# Configure the main window resizing
+# Add the Text widget inside the frame
+result_textbox = tk.Text(result_frame, height=10, width=100, bg="#e7d3b0", wrap="word")
+result_textbox.grid(row=0, column=0, sticky="nsew")
+
+# Add a vertical scrollbar to the frame
+result_scrollbar = tk.Scrollbar(result_frame, orient="vertical", command=result_textbox.yview)
+result_scrollbar.grid(row=0, column=1, sticky="ns")
+
+# Link the scrollbar to the Text widget
+result_textbox.config(yscrollcommand=result_scrollbar.set)
+
+# Configure the row and column weights for the frame
+result_frame.grid_rowconfigure(0, weight=1)
+result_frame.grid_columnconfigure(0, weight=1)
+
+## MAIN WINDOW RESIZING ##
 root.grid_rowconfigure(1, weight=1)  # Content frame resizable
 root.grid_columnconfigure(0, weight=1)
 
