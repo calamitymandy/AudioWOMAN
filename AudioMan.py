@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
+from utils import set_placeholder
+from gui_components import clear_all
 
 def expand_columns(columns, id_column_index, id_column):
     """Expands single constant values and ensures all columns match the ID column length."""
@@ -155,26 +157,6 @@ def update_id_column_label(event):
     if selected_index != -1:
         column_labels[selected_index].config(text="ID")
 
-def clear_all():
-    """Clears all textboxes, extension field, and result area."""
-    # Clear all column textboxes
-    for textbox in column_textboxes:
-        textbox.delete("1.0", tk.END)
-
-    # Reset the extension entry field to its placeholder
-    extension_entry.delete(0, tk.END)
-    set_placeholder(extension_entry, "Extension (ex: .wav)")
-
-    # Clear the result area
-    result_textbox.delete("1.0", tk.END)
-
-    # Reset the ID column selector
-    id_column_selector.set("Select ID Column")
-
-    # Reset column labels
-    for i, label in enumerate(column_labels):
-        label.config(text=f"Col {i + 1}")
-
 # Main window configuration
 root = tk.Tk()
 root.title("Fixed 6-Column Layout")
@@ -209,25 +191,6 @@ id_column_selector['values'] = []  # Initialize empty
 id_column_selector.bind("<<ComboboxSelected>>", update_id_column_label)
 
 ## EXTENSION BOX ##
-# Extension box placeholder function
-def set_placeholder(entry, placeholder, color="gray"):
-    """Set placeholder text in an entry widget."""
-    entry.insert(0, placeholder)
-    entry.config(fg=color)
-
-    def on_focus_in(event):
-        if entry.get() == placeholder:
-            entry.delete(0, tk.END)
-            entry.config(fg="black")
-
-    def on_focus_out(event):
-        if not entry.get():
-            entry.insert(0, placeholder)
-            entry.config(fg=color)
-
-    entry.bind("<FocusIn>", on_focus_in)
-    entry.bind("<FocusOut>", on_focus_out)
-
 # Extension entry #
 extension_entry = tk.Entry(nav_bar)
 extension_entry.grid(row=0, column=3, padx=5, pady=5)
@@ -236,8 +199,15 @@ extension_entry.grid(row=0, column=3, padx=5, pady=5)
 set_placeholder(extension_entry, "Extension (ex: .wav)")
 
 ## CLEAR DATA BUTTON ##
-clear_button = tk.Button(nav_bar, text="Clear", command=clear_all, bg="#f71e6c", fg="black")
+clear_button = tk.Button(
+    nav_bar, 
+    text="Clear", 
+    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder),
+    bg="#f71e6c", 
+    fg="black"
+)
 clear_button.grid(row=0, column=5, padx=5, pady=5, rowspan=2)
+
 
 ## CONTENT FRAME WITH SCROLLBARS ##
 # Create a container frame for the canvas and scrollbars
