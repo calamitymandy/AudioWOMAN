@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 from utils import set_placeholder
-from gui_components import clear_all
+from gui_components import clear_all, apply_truncation
 
 def expand_columns(columns, id_column_index, id_column):
     """Expands single constant values and ensures all columns match the ID column length."""
@@ -159,7 +159,7 @@ def update_id_column_label(event):
 
 # Main window configuration
 root = tk.Tk()
-root.title("Fixed 6-Column Layout")
+root.title("AudioMAN")
 root.geometry("1200x700")
 
 # Navigation bar (First Row)
@@ -202,7 +202,7 @@ set_placeholder(extension_entry, "Extension (ex: .wav)")
 clear_button = tk.Button(
     nav_bar, 
     text="Clear", 
-    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder),
+    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry),
     bg="#f71e6c", 
     fg="black"
 )
@@ -298,6 +298,48 @@ result_textbox.config(yscrollcommand=result_scrollbar.set)
 # Configure the row and column weights for the frame
 result_frame.grid_rowconfigure(0, weight=1)
 result_frame.grid_columnconfigure(0, weight=1)
+
+## TRUNCATION AREA ##
+# Frame for truncation inputs
+truncate_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=10)
+truncate_frame.grid(row=7, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
+
+# Add truncation controls inside the frame
+truncate_label = tk.Label(truncate_frame, bg="#e7d3b0", text="Truncate Settings:")
+truncate_label.grid(row=0, column=0, padx=50, pady=5, sticky="nsew")
+
+# Input for number of characters to truncate
+char_truncate_label = tk.Label(truncate_frame, text="Truncate # Chars:", bg="#e7d3b0")
+char_truncate_label.grid(row=0, column=1, padx=5, pady=5, sticky="e")
+char_truncate_entry = tk.Entry(truncate_frame, width=10)
+char_truncate_entry.grid(row=0, column=2, padx=5, pady=5, sticky="w")
+
+# Input for specific character to truncate up to
+char_specify_label = tk.Label(truncate_frame, text="Truncate Up To Char:", bg="#e7d3b0")
+char_specify_label.grid(row=0, column=3, padx=5, pady=5, sticky="e")
+char_specify_entry = tk.Entry(truncate_frame, width=10)
+char_specify_entry.grid(row=0, column=4, padx=5, pady=5, sticky="w")
+
+# Options for truncation direction
+truncate_dir_label = tk.Label(truncate_frame, text="Direction:", bg="#e7d3b0")
+truncate_dir_label.grid(row=0, column=5, padx=5, pady=5, sticky="e")
+
+truncate_dir_selector = ttk.Combobox(
+    truncate_frame, state="readonly", values=["Left", "Right"]
+)
+truncate_dir_selector.grid(row=0, column=5, padx=5, pady=5, sticky="w")
+truncate_dir_selector.set("Left")  # Default to "Left"
+
+# Button to apply truncation
+truncate_button = tk.Button(
+    truncate_frame,
+    text="Apply Truncation",
+    bg="#f07868",
+    command=lambda: apply_truncation(
+        result_textbox, char_truncate_entry, char_specify_entry, truncate_dir_selector
+    ),
+)
+truncate_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 
 ## MAIN WINDOW RESIZING ##
 root.grid_rowconfigure(1, weight=1)  # Content frame resizable
