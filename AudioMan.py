@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from utils import set_placeholder
+from utils import set_placeholder, update_id_column_label
 from gui_components import clear_all, apply_truncation
 
 def expand_columns(columns, id_column_index, id_column):
@@ -146,16 +146,7 @@ def remove_column():
         textbox.master.grid(row=row * 2, column=column, padx=5, pady=5, sticky="nsew")  # Update positions for textboxes
 
 
-def update_id_column_label(event):
-    """Update the label of the selected ID column to 'ID'."""
-    # Reset all labels to their original names
-    for i, label in enumerate(column_labels):
-        label.config(text=f"Col {i + 1}")
 
-    # Set the selected column's label to 'ID'
-    selected_index = id_column_selector.current()
-    if selected_index != -1:
-        column_labels[selected_index].config(text="ID")
 
 # Main window configuration
 root = tk.Tk()
@@ -188,7 +179,7 @@ id_column_selector.grid(row=0, column=2, padx=5, pady=5)
 # placeholder ID column selector
 id_column_selector.set("Select ID Column")
 id_column_selector['values'] = []  # Initialize empty
-id_column_selector.bind("<<ComboboxSelected>>", update_id_column_label)
+id_column_selector.bind("<<ComboboxSelected>>", lambda event: update_id_column_label(column_labels, id_column_selector))
 
 ## EXTENSION BOX ##
 # Extension entry #

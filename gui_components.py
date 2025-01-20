@@ -26,7 +26,7 @@ def clear_all(column_textboxes, extension_entry, result_textbox, id_column_selec
     for i, label in enumerate(column_labels):
         label.config(text=f"Col {i + 1}")
     
-    ## FUNCTION TO APPLY TRUNCATION ##
+## FUNCTION TO APPLY TRUNCATION ##
 def apply_truncation(result_textbox, char_entry, char_specify, direction_selector):
     """Apply truncation to the generated paths and keep the remaining part."""
     try:
