@@ -71,3 +71,38 @@ def apply_truncation(result_textbox, char_entry, char_specify, direction_selecto
 
     except Exception as e:
         messagebox.showerror("Error", f"Could not apply truncation: {e}")
+
+## FUNCTION TO APPLY REPLACE ##
+def apply_replace(result_textbox, ori_text_entry, dest_text_entry):
+    """Apply truncation to the generated paths and keep the remaining part."""
+    try:
+        # Get user inputs
+        ori_input = ori_text_entry.get().strip()
+        dest_input = dest_text_entry.get().strip()
+
+        # Validate input for replacing
+        if not ori_input or not dest_input:
+            messagebox.showerror("Error", "Please provide valid origin and destination texts.")
+            return
+
+        # Read current paths from the result textbox
+        paths = result_textbox.get("1.0", tk.END).strip().splitlines()
+        if not paths:
+            messagebox.showerror("Error", "No paths were found.")
+            return
+
+        # Perform replacement
+        replaced_paths = []
+        for path in paths:
+            if ori_input not in path:
+                messagebox.showerror("Error", f"'{ori_input}' not found in one of the paths.")
+                return
+            path_replaced = path.replace(ori_input, dest_input, 1)
+            replaced_paths.append(path_replaced)
+
+        # Update the result textbox with replaced paths
+        result_textbox.delete("1.0", tk.END)
+        result_textbox.insert(tk.END, "\n".join(replaced_paths))
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Could not apply replacement: {e}")
