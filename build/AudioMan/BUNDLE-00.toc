@@ -1,0 +1,3 @@
+([('AudioMan',
+   '/Users/amandine/Desktop/CODE/AudioMAN/dist/AudioMan',
+   'EXECUTABLE')],)
