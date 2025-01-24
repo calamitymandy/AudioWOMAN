@@ -57,7 +57,7 @@ def apply_truncation(result_textbox, char_entry, char_specify, direction_selecto
         truncated_paths = []
         for path in paths:
             if (path.find(specific_char) == -1):
-                messagebox.showerror("Error", "Char not found in path.")
+                messagebox.showerror("Error", f"Char not found in path: {path}")
                 return
             if specific_char:
                 if direction == "Left":

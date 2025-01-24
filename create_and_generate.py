@@ -18,41 +18,6 @@ def expand_columns(columns, id_column_index, id_column):
             expanded.append(col)  # ID column remains unchanged
     return expanded
 
-###################### GENERATE PATH ######################
-def generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox):
-    """Generates concatenated paths with handling for constant columns."""
-    try:
-        # Extract data from textboxes
-        columns = [
-            column.get("1.0", tk.END).strip().splitlines()
-            for column in column_textboxes
-        ]
-        extension = extension_entry.get().strip()
-
-        # Check if the extension field still has the placeholder
-        if extension == "Extension (ex: .wav)":
-            extension = ""  # Treat it as empty
-
-        # Get the selected ID column
-        id_column_index = id_column_selector.current()
-        if id_column_index == -1:
-            messagebox.showerror("Error", "Please select an ID column.")
-            return
-
-        id_column = columns[id_column_index]
-
-        # Expand columns to match the ID column length
-        columns = expand_columns(columns, id_column_index, id_column)
-
-        # Generate concatenated paths
-        concatenated_paths = ["".join(row) + extension for row in zip(*columns)]
-
-        # Display the result
-        result_textbox.delete("1.0", tk.END)
-        result_textbox.insert(tk.END, "\n".join(concatenated_paths))
-    except Exception as e:
-        messagebox.showerror("Error", f"Could not generate paths: {e}")
-
 ###################### ADD COLUMN ######################
 def add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position):
     """Add a new column dynamically."""
@@ -97,3 +62,39 @@ def add_column(column_textboxes, content_frame, column_labels, id_column_selecto
 
     # Update the position of the Generate button based on the number of columns
     update_generate_button_position()
+
+###################### GENERATE PATH ######################
+def generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox):
+    """Generates concatenated paths with handling for constant columns."""
+    try:
+        # Extract data from textboxes
+        columns = [
+            column.get("1.0", tk.END).strip().splitlines()
+            for column in column_textboxes
+        ]
+        extension = extension_entry.get().strip()
+
+        # Check if the extension field still has the placeholder
+        if extension == "Extension (ex: .wav)":
+            extension = ""  # Treat it as empty
+
+        # Get the selected ID column
+        id_column_index = id_column_selector.current()
+        if id_column_index == -1:
+            messagebox.showerror("Error", "Please select an ID column.")
+            return
+
+        id_column = columns[id_column_index]
+
+        # Expand columns to match the ID column length
+        columns = expand_columns(columns, id_column_index, id_column)
+
+        # Generate concatenated paths
+        concatenated_paths = ["".join(row) + extension for row in zip(*columns)]
+
+        # Display the result
+        result_textbox.delete("1.0", tk.END)
+        result_textbox.insert(tk.END, "\n".join(concatenated_paths))
+    except Exception as e:
+        messagebox.showerror("Error", f"Could not generate paths: {e}")
+
