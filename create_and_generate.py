@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import messagebox
 
 ###################### EXPAND COLUMNS ######################
 def expand_columns(columns, id_column_index, id_column):
@@ -62,6 +62,46 @@ def add_column(column_textboxes, content_frame, column_labels, id_column_selecto
 
     # Update the position of the Generate button based on the number of columns
     update_generate_button_position()
+
+###################### REMOVE COLUMN ######################
+
+def remove_column(column_textboxes, column_labels, id_column_selector, update_generate_button_position):
+    """Remove the last column dynamically."""
+    if len(column_textboxes) <= 1:
+        messagebox.showerror("Error", "At least one column must remain.")
+        return
+
+    # Remove the last column's label, textbox, and frame
+    last_label = column_labels.pop()
+    last_label.destroy()
+
+    last_textbox = column_textboxes.pop()
+    last_textbox.destroy()
+
+    last_frame = last_textbox.master  # The parent frame of the textbox
+    last_frame.destroy()
+
+    # Update the ID column selector options
+    id_column_selector['values'] = [f"Col {i + 1}" for i in range(len(column_textboxes))]
+
+    # Reset the ID column selection if the selected column was removed
+    if id_column_selector.current() >= len(column_textboxes):
+        id_column_selector.set("Select ID Column")
+
+    # Update the position of the Generate button after removing a column
+    update_generate_button_position()
+
+    # Reconfigure the grid layout for the remaining columns
+    for i, label in enumerate(column_labels):
+        row = (i // 6) + 1  # Row 1 for columns 1-6, Row 2 for columns 7-12
+        column = i % 6
+        label.grid(row=row * 2 - 1, column=column, pady=5, sticky="s")  # Update positions for labels
+
+    for i, textbox in enumerate(column_textboxes):
+        row = (i // 6) + 1  # Row 1 for columns 1-6, Row 2 for columns 7-12
+        column = i % 6
+        textbox.master.grid(row=row * 2, column=column, padx=5, pady=5, sticky="nsew")  # Update positions for textboxes
+
 
 ###################### GENERATE PATH ######################
 def generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox):
