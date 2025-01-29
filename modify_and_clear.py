@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 ###################### APPLY CLEAR DATA ######################
-def clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry):
+def clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry):
     """Clears all textboxes, extension field, and result area."""
     # Clear all column textboxes
     for textbox in column_textboxes:
@@ -23,6 +23,9 @@ def clear_all(column_textboxes, extension_entry, result_textbox, id_column_selec
     # Clear the replace area
     ori_text_entry.delete(0, tk.END)
     dest_text_entry.delete(0, tk.END)
+
+    # Clear the rename area
+    path_files_entry.delete(0, tk.END)
 
     # Reset the ID column selector
     id_column_selector.set("Select ID Column")

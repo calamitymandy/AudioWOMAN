@@ -71,7 +71,7 @@ set_placeholder(extension_entry, "Extension (ex: .wav)")
 clear_button = tk.Button(
     nav_bar, 
     text="Clear", 
-    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry),
+    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry),
     bg="#f71e6c", 
     fg="black"
 )
