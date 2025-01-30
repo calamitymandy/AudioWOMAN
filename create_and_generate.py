@@ -1,5 +1,29 @@
 import tkinter as tk
+import tkinter.filedialog as fd
+import os
+
 from tkinter import messagebox
+
+###################### COPY PATHS FROM DIRECTORY ######################
+def copy_paths(column_textboxes, content_frame, column_labels, 
+            id_column_selector, update_generate_button_position):
+    """Open file dialog, get all file paths inside the selected directory, and insert them into a new column."""
+    directory = fd.askdirectory()  # Open file dialog to select a directory
+
+    if directory:  # Ensure a directory was selected
+        copied_paths = [os.path.join(directory, f) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+
+        if not copied_paths:  # If no files found, show a message and return
+            messagebox.showinfo("Info", "No files found in the selected directory.")
+            return
+
+        add_column(
+            column_textboxes, content_frame, column_labels, 
+            id_column_selector, update_generate_button_position
+        )
+
+        # Insert all file paths into the newest text box
+        column_textboxes[-1].insert("1.0", "\n".join(copied_paths))
 
 ###################### EXPAND COLUMNS ######################
 def expand_columns(columns, id_column_index, id_column):

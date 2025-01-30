@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from utils import set_placeholder, update_id_column_label
 from modify_and_clear import clear_all, apply_truncation, apply_replace
-from create_and_generate import generate_paths, add_column, remove_column
+from create_and_generate import generate_paths, add_column, remove_column, copy_paths
 from rename_files import browse_files, apply_rename
 
 def update_generate_button_position():
@@ -66,6 +66,16 @@ extension_entry.grid(row=0, column=3, padx=5, pady=5)
 
 # placeholder for the extension_entry
 set_placeholder(extension_entry, "Extension (ex: .wav)")
+
+# Copy paths from directory #
+browse_button = tk.Button(
+    nav_bar, 
+    text="Copy all paths from directory", 
+    bg="#f07868", 
+    command=lambda: copy_paths(column_textboxes, content_frame, column_labels, 
+            id_column_selector, update_generate_button_position)
+    )
+browse_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
 
 ## CLEAR DATA BUTTON ##
 clear_button = tk.Button(
