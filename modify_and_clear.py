@@ -94,7 +94,7 @@ def apply_replace(result_textbox, ori_text_entry, dest_text_entry):
         dest_input = dest_text_entry.get().strip()
 
         # Validate input for replacing
-        if not ori_input or not dest_input:
+        if not ori_input:
             messagebox.showerror("Error", "Please provide valid origin and destination texts.")
             return
 

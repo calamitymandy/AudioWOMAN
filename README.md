@@ -49,13 +49,15 @@ Creates file paths by concatenating the values entered in each column.
 
 🔹 **How to use it:**
 
-1. Enter text into the textboxes for each column. Each line represents a separate entry.
-2. Ensure the ID column contains the reference row count. Other columns should either:
+1.	Add up to 12 columns to put your text and remove them as needed
+2.	Enter text into the textboxes for each column. Each line represents a separate entry.
+3.	Ensure the ID column contains the reference row count. Other columns should either:
    - Match the ID column in the number of entries, or
    - Contain a single value (which will be automatically expanded).
-3. Use the **"ID Column"** dropdown to select the reference column.
-4. (Optional) Add a file extension (e.g., `.wav`, `.csv`) in the **Extension** input box.
-5. Click **"Generate Paths"** to create concatenated paths. The results will appear in the **Result** area.
+4.	(Optional) Add a file extension (e.g., `.wav`, `.csv`) in the **Extension** input box.
+5.	(Optional) Copy in the first column all file paths from a directory, including the ones in subdirectories. 
+6. Use the **"ID Column"** dropdown to select the reference column.
+7. Click **"Generate Paths"** to create concatenated paths. The results will appear in the **Result** area.
 
 ---
 
@@ -83,12 +85,12 @@ Finds and replaces specific text in file paths.
 🔹 **How to use it:**
 
 1. Enter the text you want to replace.
-2. Enter the new text.
+2. Enter the new text (or nothing if you want to erase the text you entered).
 3. Click **"Apply Replace"**.
 
 💡 **Tip:** Use this to adjust filenames or modify folder names before renaming.
 
-⚠ **Important:** If the text is not found in all paths, an error will be displayed.
+⚠ **Important:** The program searches for the first occurrence of the text you entered. If the text isn’t found in all paths, an error will be displayed.
 
 ---
 

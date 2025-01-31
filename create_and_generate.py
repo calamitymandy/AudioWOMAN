@@ -11,19 +11,18 @@ def copy_paths(column_textboxes, content_frame, column_labels,
     directory = fd.askdirectory()  # Open file dialog to select a directory
 
     if directory:  # Ensure a directory was selected
-        copied_paths = [os.path.join(directory, f) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+        copied_paths = []
+
+        for root, _, files in os.walk(directory):
+            for file in files:
+                copied_paths.append(os.path.join(root, file))
 
         if not copied_paths:  # If no files found, show a message and return
             messagebox.showinfo("Info", "No files found in the selected directory.")
             return
 
-        add_column(
-            column_textboxes, content_frame, column_labels, 
-            id_column_selector, update_generate_button_position
-        )
-
         # Insert all file paths into the newest text box
-        column_textboxes[-1].insert("1.0", "\n".join(copied_paths))
+        column_textboxes[0].insert("1.0", "\n".join(copied_paths))
 
 ###################### EXPAND COLUMNS ######################
 def expand_columns(columns, id_column_index, id_column):
@@ -143,7 +142,10 @@ def generate_paths(column_textboxes, extension_entry, id_column_selector, result
             extension = ""  # Treat it as empty
 
         # Get the selected ID column
-        id_column_index = id_column_selector.current()
+        if len(column_textboxes) == 1:
+            id_column_index = 0
+        else:
+            id_column_index = id_column_selector.current()
         if id_column_index == -1:
             messagebox.showerror("Error", "Please select an ID column.")
             return
