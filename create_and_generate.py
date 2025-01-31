@@ -22,6 +22,7 @@ def copy_paths(column_textboxes, content_frame, column_labels,
             return
 
         # Insert all file paths into the newest text box
+        column_textboxes[0].delete("1.0", tk.END)
         column_textboxes[0].insert("1.0", "\n".join(copied_paths))
 
 ###################### EXPAND COLUMNS ######################
