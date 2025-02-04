@@ -5,8 +5,7 @@ import os
 from tkinter import messagebox
 
 ###################### COPY PATHS FROM DIRECTORY ######################
-def copy_paths(column_textboxes, content_frame, column_labels, 
-            id_column_selector, update_generate_button_position):
+def copy_paths(column_textboxes):
     """Open file dialog, get all file paths inside the selected directory, and insert them into a new column."""
     directory = fd.askdirectory()  # Open file dialog to select a directory
 

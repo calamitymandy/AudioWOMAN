@@ -72,8 +72,7 @@ browse_button = tk.Button(
     nav_bar, 
     text="Copy all paths from directory", 
     bg="#f07868", 
-    command=lambda: copy_paths(column_textboxes, content_frame, column_labels, 
-            id_column_selector, update_generate_button_position)
+    command=lambda: copy_paths(column_textboxes)
     )
 browse_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
 
