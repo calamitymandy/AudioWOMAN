@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from utils import set_placeholder, update_id_column_label
+from utils import set_placeholder, update_id_column_label, update_textbox_label
 from modify_and_clear import clear_all, apply_truncation, apply_replace
 from create_and_generate import generate_paths, add_column, remove_column, copy_paths
 from rename_files import browse_files, apply_rename
@@ -12,8 +12,9 @@ def update_generate_button_position():
     total_columns = len(column_textboxes)
     button_row = 4 if total_columns <= 6 else 5  # Depending on row count
 
-    # Update the button position (between columns and result area)
-    generate_button.grid(row=button_row, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
+    # Update the buttons positions (between columns and result area)
+    generate_new_button.grid(row=button_row, column=0, columnspan=2, padx=5, pady=10, sticky="ew")
+    generate_add_button.grid(row=button_row, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
 
 ###################### MAIN WINDOW CONFIGURATION ######################
 root = tk.Tk()
@@ -35,7 +36,7 @@ nav_bar.grid_columnconfigure(5, weight=1)
 add_column_button = tk.Button(
     nav_bar, 
     text="Add Column", 
-    command=lambda: add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position), 
+    command=lambda: add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position, update_textbox_label), 
     bg="#f07868", 
     fg="black"
     )
@@ -58,7 +59,10 @@ id_column_selector.grid(row=0, column=2, padx=5, pady=5)
 # placeholder ID column selector
 id_column_selector.set("Select ID Column")
 id_column_selector['values'] = []  # Initialize empty
-id_column_selector.bind("<<ComboboxSelected>>", lambda event: update_id_column_label(column_labels, id_column_selector))
+id_column_selector.bind(
+    "<<ComboboxSelected>>",
+    lambda event: update_id_column_label(column_labels, column_textboxes, id_column_selector, update_textbox_label),
+)
 
 # Extension entry #
 extension_entry = tk.Entry(nav_bar)
@@ -146,21 +150,30 @@ for col in range(6):
 column_textboxes = []
 column_labels = []
 
-## Button to generate paths ##
-generate_button = tk.Button(
+## Button to generate new paths (& delete what was in result textbox) ##
+generate_new_button = tk.Button(
     content_frame, 
-    text="Generate Paths", 
-    command=lambda: generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox), 
+    text="Generate New Paths", 
+    command=lambda: generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox, append=False), 
     bg="#f07868"
     )
-generate_button.grid(row=4, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
+generate_new_button.grid(row=4, column=0, columnspan=2, padx=5, pady=10, sticky="ew")
+
+## Button to add paths to the one already existing ##
+generate_add_button = tk.Button(
+    content_frame, 
+    text="Add more Paths", 
+    command=lambda: generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox, append=True), 
+    bg="#f07868"
+    )
+generate_add_button.grid(row=4, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
 
 ## Add the first two columns ##
 for _ in range(2):
-    add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position)
+    add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position, update_textbox_label)
 
 ###################### RESULT AREA WITH SCROLLBAR ######################
-result_label = tk.Label(content_frame, text="Result:", bg="#e7d3b0")
+result_label = tk.Label(content_frame, text="Result: 0 lines", bg="#e7d3b0")
 result_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
 
 # Create a frame for the result area and scrollbar
@@ -170,6 +183,9 @@ result_frame.grid(row=6, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 # Add the Text widget inside the frame
 result_textbox = tk.Text(result_frame, height=10, width=100, bg="#e7d3b0", wrap="word")
 result_textbox.grid(row=0, column=0, sticky="nsew")
+
+# Update the label dynamically
+update_textbox_label(result_textbox, result_label, prefix="Result")
 
 # Add a vertical scrollbar to the frame
 result_scrollbar = tk.Scrollbar(result_frame, orient="vertical", command=result_textbox.yview)

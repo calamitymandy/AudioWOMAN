@@ -19,13 +19,35 @@ def set_placeholder(entry, placeholder, color="gray"):
     entry.bind("<FocusIn>", on_focus_in)
     entry.bind("<FocusOut>", on_focus_out)
 
-def update_id_column_label(column_labels, id_column_selector):
-    """Update the label of the selected ID column to 'ID'."""
-    # Reset all labels to their original names
-    for i, label in enumerate(column_labels):
-        label.config(text=f"Col {i + 1}")
-
-    # Set the selected column's label to 'ID'
+def update_id_column_label(column_labels, column_textboxes, id_column_selector, update_textbox_label):
+    """Update only the selected column label to 'ID' without modifying others."""
     selected_index = id_column_selector.current()
+
     if selected_index != -1:
-        column_labels[selected_index].config(text="ID")
+        # Extract current line count from the label
+        current_label_text = column_labels[selected_index].cget("text")
+        parts = current_label_text.split(":")  # Example: ["Col 1", " 10 lines"]
+        
+        if len(parts) > 1:
+            line_count_text = parts[1]  # Keep the existing "X lines" part
+        else:
+            line_count_text = "0 lines"  # Default if something is missing
+        
+        # Update the selected column label
+        column_labels[selected_index].config(text=f"ID:{line_count_text}")
+
+        # Ensure the label updates dynamically when the textbox changes
+        update_textbox_label(column_textboxes[selected_index], column_labels[selected_index], "ID")
+
+def update_textbox_label(textbox, label, prefix):
+    """Update the label with the number of lines in the given textbox."""
+    def update_label(event=None):  # Accept event parameter for bindings
+        line_count = len(textbox.get("1.0", tk.END).strip().splitlines())
+        label.config(text=f"{prefix}: {line_count} lines")
+
+    # Bind the update function to key and mouse events
+    textbox.bind("<KeyRelease>", update_label)
+    textbox.bind("<ButtonRelease>", update_label)
+
+    # Call the function once to set initial label
+    update_label()

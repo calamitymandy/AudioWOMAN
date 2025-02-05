@@ -42,10 +42,10 @@ def expand_columns(columns, id_column_index, id_column):
     return expanded
 
 ###################### ADD COLUMN ######################
-def add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position):
+def add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position, update_textbox_label):
     """Add a new column dynamically."""
     column_number = len(column_textboxes) + 1
-
+    
     if column_number > 12:
         messagebox.showerror("Error", "Cannot create more than 12 columns.")
         return
@@ -55,7 +55,7 @@ def add_column(column_textboxes, content_frame, column_labels, id_column_selecto
     grid_col = (column_number - 1) % 6
 
     # Add a label for the column
-    new_label = tk.Label(content_frame, text=f"Col {column_number}", bg="#e7d3b0")
+    new_label = tk.Label(content_frame, text=f"Col {column_number}:", bg="#e7d3b0")
     new_label.grid(row=grid_row * 2 - 1, column=grid_col, pady=5, sticky="s")
     column_labels.append(new_label)
 
@@ -73,6 +73,9 @@ def add_column(column_textboxes, content_frame, column_labels, id_column_selecto
 
     # Link the scrollbar to the Text widget
     new_textbox.config(yscrollcommand=scrollbar.set)
+
+    # Update the label dynamically
+    update_textbox_label(new_textbox, new_label, prefix=f"Col {column_number}")
 
     # Configure row and column weights for the frame to make it resize correctly
     frame.grid_rowconfigure(0, weight=1)  # Let the row with Text widget expand
@@ -127,7 +130,7 @@ def remove_column(column_textboxes, column_labels, id_column_selector, update_ge
 
 
 ###################### GENERATE PATH ######################
-def generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox):
+def generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox, append):
     """Generates concatenated paths with handling for constant columns."""
     try:
         # Extract data from textboxes
@@ -158,9 +161,17 @@ def generate_paths(column_textboxes, extension_entry, id_column_selector, result
         # Generate concatenated paths
         concatenated_paths = ["".join(row) + extension for row in zip(*columns)]
 
-        # Display the result
-        result_textbox.delete("1.0", tk.END)
-        result_textbox.insert(tk.END, "\n".join(concatenated_paths))
+        # Insert the new paths into the result textbox
+        if append:
+            existing_text = result_textbox.get("1.0", tk.END).strip()
+            if existing_text:
+                result_textbox.insert(tk.END, "\n" + "\n".join(concatenated_paths))
+            else:
+                result_textbox.insert(tk.END, "\n".join(concatenated_paths))
+        else:
+            result_textbox.delete("1.0", tk.END)
+            result_textbox.insert(tk.END, "\n".join(concatenated_paths))
+
     except Exception as e:
         messagebox.showerror("Error", f"Could not generate paths: {e}")
 
