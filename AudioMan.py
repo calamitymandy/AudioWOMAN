@@ -84,7 +84,22 @@ browse_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
 clear_button = tk.Button(
     nav_bar, 
     text="Clear", 
-    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, result_label, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry),
+    command=lambda: clear_all(
+        column_textboxes, 
+        extension_entry, 
+        result_textbox, 
+        result_label, 
+        id_column_selector, 
+        column_labels, 
+        set_placeholder, 
+        char_truncate_entry, 
+        char_specify_entry, 
+        truncate_dir_selector, 
+        ori_text_entry, 
+        dest_text_entry, 
+        path_files_entry,
+        count_label
+        ),
     bg="#f71e6c", 
     fg="black"
 )
@@ -287,8 +302,6 @@ replace_button = tk.Button(
 )
 replace_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 
-
-
 ###################### RENAME AREA ######################
 # Frame for rename inputs
 rename_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=15)
@@ -313,9 +326,13 @@ browse_button = tk.Button(
     rename_frame, 
     text="Browse", 
     bg="#f07868", 
-    command=lambda: browse_files(path_files_entry)
+    command=lambda: browse_files(path_files_entry, count_label)
     )
 browse_button.grid(row=2, column=1, padx=5, pady=5, sticky="w")
+
+# Add rename controls inside the frame
+count_label = tk.Label(rename_frame, bg="#e7d3b0", text="copied files: 0")
+count_label.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
 
 # Button to apply rename
 rename_button = tk.Button(
@@ -326,7 +343,7 @@ rename_button = tk.Button(
         result_textbox, path_files_entry
     ),
 )
-rename_button.grid(row=3, column=0, columnspan=2, padx=5, pady=20, sticky="sew")
+rename_button.grid(row=4, column=0, columnspan=2, padx=5, pady=20, sticky="sew")
 
 ###################### MAIN WINDOW RESIZING ######################
 root.grid_rowconfigure(1, weight=1)  # Content frame resizable

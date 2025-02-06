@@ -6,12 +6,18 @@ import shutil
 from tkinter import messagebox
 
 ###################### BROWSE ORI FILES FOR RENAMING ######################
-def browse_files(path_files_entry):
-    """Open file dialog and insert selected file path into the entry."""
-    file_path = fd.askdirectory()  # Open file dialog
-    if file_path:
+def browse_files(path_files_entry, count_label):
+    """Open folder dialog, insert selected folder path, and count files (including subdirectories)."""
+    files_in_folder = fd.askdirectory()  # Open folder dialog
+    if files_in_folder:
         path_files_entry.delete(0, tk.END)  # Clear existing text
-        path_files_entry.insert(0, file_path)  # Insert selected file path
+        path_files_entry.insert(0, files_in_folder)  # Insert selected folder path
+
+        # Count all files (including in subdirectories)
+        file_count = sum(len(files) for _, _, files in os.walk(files_in_folder))
+
+        # Update label with the file count
+        count_label.config(text=f"copied files: {file_count}")
 
 ###################### DO RENAMING ######################
 
@@ -50,8 +56,9 @@ def apply_rename(result_textbox, path_files_entry):
 
     # Step 2: Rename files based on result_textbox
     lines = result_textbox.get("1.0", "end").strip().split("\n")  # Get file paths
+
     if len(lines) != len(copied_files):
-        messagebox.showerror("Error", "Number of files and renaming paths do not match.")
+        messagebox.showerror("Error", "Number of files and list of filenames do not match.")
         return
 
     for old_path, new_relative_path in zip(copied_files, lines):
