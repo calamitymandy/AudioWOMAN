@@ -22,28 +22,40 @@ def set_placeholder(entry, placeholder, color="gray"):
 def update_id_column_label(column_labels, column_textboxes, id_column_selector, update_textbox_label):
     """Update only the selected column label to 'ID' without modifying others."""
     selected_index = id_column_selector.current()
+    
+    if selected_index == -1:
+        return  # No column selected
 
-    if selected_index != -1:
-        # Extract current line count from the label
-        current_label_text = column_labels[selected_index].cget("text")
-        parts = current_label_text.split(":")  # Example: ["Col 1", " 10 lines"]
-        
-        if len(parts) > 1:
-            line_count_text = parts[1]  # Keep the existing "X lines" part
-        else:
-            line_count_text = "0 lines"  # Default if something is missing
-        
-        # Update the selected column label
-        column_labels[selected_index].config(text=f"ID:{line_count_text}")
+    # Find the previously marked ID column and reset its label
+    for i, label in enumerate(column_labels):
+        if label.cget("text").startswith("ID:"):
+            # Extract line count
+            line_count = label.cget("text").split(":")[-1].strip()  # Get "X lines"
+            label.config(text=f"Col {i+1}: {line_count}")  # Reset to "Col X: X lines"
+            # Unbind events to prevent it from updating back to ID
+            column_textboxes[i].unbind("<KeyRelease>")
+            column_textboxes[i].unbind("<ButtonRelease>")
 
-        # Ensure the label updates dynamically when the textbox changes
-        update_textbox_label(column_textboxes[selected_index], column_labels[selected_index], "ID")
+    # Get the current line count of the selected column
+    current_label_text = column_labels[selected_index].cget("text")
+    parts = current_label_text.split(":")
+    
+    if len(parts) > 1:
+        line_count_text = parts[1]  # Keep "X lines"
+    else:
+        line_count_text = "0 lines"  # Default
+
+    # Update the selected column's label to "ID: X lines"
+    column_labels[selected_index].config(text=f"ID: {line_count_text}")
+
+    # Ensure the label updates dynamically when the textbox changes
+    update_textbox_label(column_textboxes[selected_index], column_labels[selected_index], "ID")
 
 def update_textbox_label(textbox, label, prefix):
     """Update the label with the number of lines in the given textbox."""
     def update_label(event=None):  # Accept event parameter for bindings
         line_count = len(textbox.get("1.0", tk.END).strip().splitlines())
-        label.config(text=f"{prefix}: {line_count} lines")
+        label.config(text=f"{prefix}:       {line_count} lines")
 
     # Bind the update function to key and mouse events
     textbox.bind("<KeyRelease>", update_label)

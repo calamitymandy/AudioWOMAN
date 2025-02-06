@@ -76,7 +76,7 @@ browse_button = tk.Button(
     nav_bar, 
     text="Copy all paths from directory", 
     bg="#f07868", 
-    command=lambda: copy_paths(column_textboxes)
+    command=lambda: copy_paths(column_textboxes, column_labels, update_textbox_label)
     )
 browse_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
 
@@ -84,7 +84,7 @@ browse_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
 clear_button = tk.Button(
     nav_bar, 
     text="Clear", 
-    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry),
+    command=lambda: clear_all(column_textboxes, extension_entry, result_textbox, result_label, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry),
     bg="#f71e6c", 
     fg="black"
 )
@@ -154,7 +154,15 @@ column_labels = []
 generate_new_button = tk.Button(
     content_frame, 
     text="Generate New Paths", 
-    command=lambda: generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox, append=False), 
+    command=lambda: generate_paths(
+        column_textboxes, 
+        extension_entry, 
+        id_column_selector, 
+        result_textbox, 
+        result_label, 
+        update_textbox_label, 
+        append=False
+        ), 
     bg="#f07868"
     )
 generate_new_button.grid(row=4, column=0, columnspan=2, padx=5, pady=10, sticky="ew")
@@ -163,17 +171,24 @@ generate_new_button.grid(row=4, column=0, columnspan=2, padx=5, pady=10, sticky=
 generate_add_button = tk.Button(
     content_frame, 
     text="Add more Paths", 
-    command=lambda: generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox, append=True), 
+    command=lambda: generate_paths(
+        column_textboxes, 
+        extension_entry, 
+        id_column_selector, 
+        result_textbox,
+        result_label, 
+        update_textbox_label, 
+        append=True
+        ), 
     bg="#f07868"
     )
 generate_add_button.grid(row=4, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
 
 ## Add the first two columns ##
-for _ in range(2):
-    add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position, update_textbox_label)
+add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position, update_textbox_label)
 
 ###################### RESULT AREA WITH SCROLLBAR ######################
-result_label = tk.Label(content_frame, text="Result: 0 lines", bg="#e7d3b0")
+result_label = tk.Label(content_frame, text="Result:        0 lines", bg="#e7d3b0")
 result_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
 
 # Create a frame for the result area and scrollbar

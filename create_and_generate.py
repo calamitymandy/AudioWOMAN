@@ -5,7 +5,7 @@ import os
 from tkinter import messagebox
 
 ###################### COPY PATHS FROM DIRECTORY ######################
-def copy_paths(column_textboxes):
+def copy_paths(column_textboxes, column_labels, update_textbox_label):
     """Open file dialog, get all file paths inside the selected directory, and insert them into a new column."""
     directory = fd.askdirectory()  # Open file dialog to select a directory
 
@@ -23,6 +23,9 @@ def copy_paths(column_textboxes):
         # Insert all file paths into the newest text box
         column_textboxes[0].delete("1.0", tk.END)
         column_textboxes[0].insert("1.0", "\n".join(copied_paths))
+
+        # Explicitly update the column label after copying paths
+        update_textbox_label(column_textboxes[0], column_labels[0], "Col 1")
 
 ###################### EXPAND COLUMNS ######################
 def expand_columns(columns, id_column_index, id_column):
@@ -130,7 +133,7 @@ def remove_column(column_textboxes, column_labels, id_column_selector, update_ge
 
 
 ###################### GENERATE PATH ######################
-def generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox, append):
+def generate_paths(column_textboxes, extension_entry, id_column_selector, result_textbox, result_label, update_textbox_label, append):
     """Generates concatenated paths with handling for constant columns."""
     try:
         # Extract data from textboxes
@@ -171,6 +174,9 @@ def generate_paths(column_textboxes, extension_entry, id_column_selector, result
         else:
             result_textbox.delete("1.0", tk.END)
             result_textbox.insert(tk.END, "\n".join(concatenated_paths))
+        
+        # Explicitly update the result label after inserting new paths
+        update_textbox_label(result_textbox, result_label, "Result")
 
     except Exception as e:
         messagebox.showerror("Error", f"Could not generate paths: {e}")

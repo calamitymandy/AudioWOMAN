@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 ###################### APPLY CLEAR DATA ######################
-def clear_all(column_textboxes, extension_entry, result_textbox, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry):
+def clear_all(column_textboxes, extension_entry, result_textbox, result_label, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry):
     """Clears all textboxes, extension field, and result area."""
     # Clear all column textboxes
     for textbox in column_textboxes:
@@ -14,6 +14,7 @@ def clear_all(column_textboxes, extension_entry, result_textbox, id_column_selec
 
     # Clear the result area
     result_textbox.delete("1.0", tk.END)
+    result_label.config(text=f"Result:      0 lines")
 
     # Clear the truncate area
     char_truncate_entry.delete(0, tk.END)
@@ -32,7 +33,7 @@ def clear_all(column_textboxes, extension_entry, result_textbox, id_column_selec
 
     # Reset column labels
     for i, label in enumerate(column_labels):
-        label.config(text=f"Col {i + 1}")
+        label.config(text=f"Col {i + 1}:        0 lines")
     
 ###################### APPLY TRUNCATION ######################
 def apply_truncation(result_textbox, char_entry, char_specify, direction_selector):
