@@ -4,8 +4,8 @@
 pyinstaller --onefile --noconsole .\AudioMan.py
 
 ## **Actualize .app & .dmg:**
-pyinstaller --onefile --noconsole --windowed --name "AudioMan" AudioMan.py
-dmgbuild -s settings.py "AudioMAN" dist/AudioMAN.dmg
+* pyinstaller --onefile --noconsole --windowed --name "AudioMan" AudioMan.py
+* dmgbuild -s settings.py "AudioMAN" dist/AudioMAN.dmg
 
 ------------------------------------------------------------------------
 
