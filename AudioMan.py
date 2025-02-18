@@ -185,7 +185,7 @@ generate_new_button.grid(row=4, column=0, columnspan=2, padx=5, pady=10, sticky=
 ## Button to add paths to the one already existing ##
 generate_add_button = tk.Button(
     content_frame, 
-    text="Add more Paths", 
+    text="Add More Paths", 
     command=lambda: generate_paths(
         column_textboxes, 
         extension_entry, 

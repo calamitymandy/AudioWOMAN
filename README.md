@@ -42,7 +42,7 @@ Run the `.exe` (Windows) or `.dmg` (Mac) file to open the application.
 
 ## **How to Use**
 
-### **Generate Paths**
+### **Generate New Paths / Add More Paths**
 
 🔹 **What it does:**
 Creates file paths by concatenating the values entered in each column.
@@ -57,7 +57,10 @@ Creates file paths by concatenating the values entered in each column.
 4.	(Optional) Add a file extension (e.g., `.wav`, `.csv`) in the **Extension** input box.
 5.	(Optional) Copy in the first column all file paths from a directory, including the ones in subdirectories. 
 6. Use the **"ID Column"** dropdown to select the reference column.
-7. Click **"Generate Paths"** to create concatenated paths. The results will appear in the **Result** area.
+
+To generate your list of path you can choose one of thes two options:
+  - Click **"Generate New Paths"** to create concatenated paths. The results will appear in the **Result** area and will overwrite whatever was already in the result area.
+  - Click **"Add More Paths"** to add concatenated paths below the one that are already in the **Result** area.
 
 ---
 
