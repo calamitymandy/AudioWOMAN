@@ -90,39 +90,57 @@ def apply_truncation(result_textbox, char_entry, char_specify, direction_selecto
     direction_selector.set("Left")
 
 ###################### APPLY REPLACE ######################
-def apply_replace(result_textbox, ori_text_entry, dest_text_entry):
-    """Apply truncation to the generated paths and keep the remaining part."""
+import tkinter.messagebox as messagebox
+
+def apply_replace(result_textbox, ori_text_entry, dest_text_entry, strict_mode=True):
+    """Replace text in the generated paths.
+    
+    strict_mode=True: Requires all paths to contain `ori_input`, otherwise shows an error.  
+    strict_mode=False: Replaces occurrences in paths that contain `ori_input`, skipping others.
+    """
     try:
-        # Get user inputs
         ori_input = ori_text_entry.get().strip()
         dest_input = dest_text_entry.get().strip()
 
-        # Validate input for replacing
         if not ori_input:
-            messagebox.showerror("Error", "Please provide valid origin and destination texts.")
+            messagebox.showerror("Error", "Please provide text to replace.")
             return
 
-        # Read current paths from the result textbox
+        # Read current paths
         paths = result_textbox.get("1.0", tk.END).strip().splitlines()
         if not paths:
             messagebox.showerror("Error", "No paths were found.")
             return
 
-        # Perform replacement
         replaced_paths = []
-        for path in paths:
-            if ori_input not in path:
-                messagebox.showerror("Error", f"'{ori_input}' not found in one of the paths.")
-                return
-            path_replaced = path.replace(ori_input, dest_input, 1)
-            replaced_paths.append(path_replaced)
+        missing_replacement = False
+        changed_count = 0  # Track how many paths were modified
 
-        # Update the result textbox with replaced paths
+        for path in paths:
+            if ori_input in path:
+                new_path = path.replace(ori_input, dest_input)
+                replaced_paths.append(new_path)
+                changed_count += 1
+            else:
+                replaced_paths.append(path)
+                if strict_mode:
+                    missing_replacement = True  # At least one path is missing the target
+
+        if strict_mode and missing_replacement:
+            messagebox.showerror("Error", f"'{ori_input}' not found in all paths. No changes applied.")
+            return
+
+        if changed_count == 0:
+            messagebox.showinfo("Info", "No matching text found to replace.")
+            return
+
+        # Update the result textbox
         result_textbox.delete("1.0", tk.END)
         result_textbox.insert(tk.END, "\n".join(replaced_paths))
 
     except Exception as e:
         messagebox.showerror("Error", f"Could not apply replacement: {e}")
+
     
     # reset settings
     ori_text_entry.delete("0", tk.END)

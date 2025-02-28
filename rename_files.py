@@ -69,7 +69,8 @@ def apply_rename(result_textbox, path_files_entry):
     for old_path, new_relative_path in zip(copied_files, lines):
         # Normalize the new path to ensure proper directory structure
         new_relative_path = new_relative_path.replace("\\", "/")  # Convert all backslashes to forward slashes
-        new_absolute_path = os.path.join(new_folder, new_relative_path)
+        new_absolute_path = os.path.join(new_folder, *new_relative_path.replace("\\", "/").split("/"))
+
 
         # Ensure subdirectories exist for the new path
         new_parent_folder = os.path.dirname(new_absolute_path)

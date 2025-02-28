@@ -234,7 +234,7 @@ truncate_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#219
 truncate_frame.grid(row=7, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
 # Add truncation controls inside the frame
-truncate_label = tk.Label(truncate_frame, bg="#e7d3b0", text="TRUNCATE SETTINGS")
+truncate_label = tk.Label(truncate_frame, bg="#e7d3b0", text="TRUNCATE ->")
 truncate_label.grid(row=0, column=0, padx=50, pady=5, sticky="nsew")
 
 # Input for number of characters to truncate
@@ -270,13 +270,13 @@ truncate_button = tk.Button(
 )
 truncate_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 
-###################### REPLACE AREA ######################
+###################### REPLACE ALL AREA ######################
 # Frame for replace inputs
 replace_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=10)
 replace_frame.grid(row=8, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
 # Add replace controls inside the frame
-replace_label = tk.Label(replace_frame, bg="#e7d3b0", text="REPLACE SETTINGS")
+replace_label = tk.Label(replace_frame, bg="#e7d3b0", text="REPLACE ALL ->")
 replace_label.grid(row=0, column=0, padx=50, pady=5, sticky="nsew")
 
 # Input for the characters to replace
@@ -291,21 +291,54 @@ dest_text_label.grid(row=0, column=3, padx=5, pady=5, sticky="e")
 dest_text_entry = tk.Entry(replace_frame, width=10)
 dest_text_entry.grid(row=0, column=4, padx=5, pady=5, sticky="w")
 
-# Button to apply truncation
+# Button to apply replacing
 replace_button = tk.Button(
     replace_frame,
     text="Replace",
     bg="#f07868",
     command=lambda: apply_replace(
-        result_textbox, ori_text_entry, dest_text_entry
+        result_textbox, ori_text_entry, dest_text_entry, strict_mode=True
     ),
 )
 replace_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 
+###################### PARTIAL REPLACE AREA ######################
+# Frame for partial replace inputs
+partial_replace_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=10)
+partial_replace_frame.grid(row=9, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
+
+# Add replace controls inside the frame
+partial_replace_label = tk.Label(partial_replace_frame, bg="#e7d3b0", text="PARTIAL REPLACE ->")
+partial_replace_label.grid(row=0, column=0, padx=50, pady=5, sticky="nsew")
+
+# Input for the characters to replace
+partial_ori_text_label = tk.Label(partial_replace_frame, text="Find this:", bg="#e7d3b0")
+partial_ori_text_label.grid(row=0, column=1, padx=5, pady=5, sticky="e")
+partial_ori_text_entry = tk.Entry(partial_replace_frame, width=10)
+partial_ori_text_entry.grid(row=0, column=2, padx=5, pady=5, sticky="w")
+
+# Input for the characters we want
+partial_dest_text_label = tk.Label(partial_replace_frame, text="Replace it by that:", bg="#e7d3b0")
+partial_dest_text_label.grid(row=0, column=3, padx=5, pady=5, sticky="e")
+partial_dest_text_entry = tk.Entry(partial_replace_frame, width=10)
+partial_dest_text_entry.grid(row=0, column=4, padx=5, pady=5, sticky="w")
+
+# Button to apply replacing
+partial_replace_button = tk.Button(
+    partial_replace_frame,
+    text="Partial Replace",
+    bg="#f07868",
+    command=lambda: apply_replace(
+        result_textbox, partial_ori_text_entry, partial_dest_text_entry, strict_mode=False
+    ),
+)
+partial_replace_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
+
+
 ###################### RENAME AREA ######################
 # Frame for rename inputs
 rename_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=15)
-rename_frame.grid(row=9, column=2, columnspan=2, padx=5, pady=5, sticky="new")
+rename_frame.grid(row=10, column=2, columnspan=2, padx=5, pady=5, sticky="new")
 
 # Configure columns to expand evenly
 rename_frame.grid_columnconfigure(0, weight=1)
