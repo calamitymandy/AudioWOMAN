@@ -93,7 +93,10 @@ Finds and replaces specific text in file paths.
 
 💡 **Tip:** Use this to adjust filenames or modify folder names before renaming.
 
-⚠ **Important:** The program searches for the first occurrence of the text you entered. If the text isn’t found in all paths, an error will be displayed.
+⚠ **Important:** 
+- For the “Replace All” option, the program searches for the first occurrence of the text you entered.  If the text isn’t found in all paths, an error will be displayed.
+
+- For the “Partial Replace” option, every occurrence of the text present in any path will be replaced.
 
 ---
 
