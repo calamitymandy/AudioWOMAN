@@ -338,7 +338,7 @@ partial_replace_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 ###################### RENAME AREA ######################
 # Frame for rename inputs
 rename_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=15)
-rename_frame.grid(row=10, column=2, columnspan=2, padx=5, pady=5, sticky="new")
+rename_frame.grid(row=10, column=0, columnspan=2, padx=5, pady=5, sticky="new")
 
 # Configure columns to expand evenly
 rename_frame.grid_columnconfigure(0, weight=1)
@@ -351,7 +351,7 @@ rename_label.grid(row=0, column=0, columnspan=2, padx=5, pady=20, sticky="nsew")
 # Input for the files to rename
 path_files_label = tk.Label(rename_frame, text="Replace from path:", bg="#e7d3b0")
 path_files_label.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
-path_files_entry = tk.Entry(rename_frame, width=30)  # Increased width
+path_files_entry = tk.Entry(rename_frame, width=40)  # Increased width
 path_files_entry.grid(row=2, column=0, padx=5, pady=5, sticky="e")
 
 # Browse button
@@ -377,6 +377,97 @@ rename_button = tk.Button(
     ),
 )
 rename_button.grid(row=4, column=0, columnspan=2, padx=5, pady=20, sticky="sew")
+
+###################### FILEAUDIT & MEDIAINFO AREA ######################
+# Frame for inputs
+analyze_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=15)
+analyze_frame.grid(row=10, column=2, columnspan=4, padx=5, pady=5, sticky="new")
+
+# Configure columns to expand evenly
+analyze_frame.grid_columnconfigure(0, weight=1)
+analyze_frame.grid_columnconfigure(1, weight=1)
+analyze_frame.grid_columnconfigure(2, weight=1)
+analyze_frame.grid_columnconfigure(3, weight=1)
+
+# Add title
+analyze_label = tk.Label(analyze_frame, bg="#e7d3b0", text="FILE AUDIT & MEDIA INFO")
+analyze_label.grid(row=0, column=0, columnspan=4, padx=5, pady=20, sticky="nsew")
+
+# Button Media info
+mediainfo_button = tk.Button(
+    analyze_frame,
+    text="Media info",
+    bg="#f07868",
+    command=lambda: apply_rename(result_textbox, path_files_entry),
+)
+mediainfo_button.grid(row=1, column=4, padx=5, pady=5, sticky="sew")
+
+# Folder selection
+analyze_files_label = tk.Label(analyze_frame, text="Folder to Audit:", bg="#e7d3b0")
+analyze_files_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
+analyze_files_entry = tk.Entry(analyze_frame)
+analyze_files_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
+
+# Browse button
+browse_button = tk.Button(
+    analyze_frame,
+    text="Browse",
+    bg="#f07868",
+    command=lambda: browse_files(analyze_files_entry, count_label),
+)
+browse_button.grid(row=1, column=2, padx=5, pady=5, sticky="w")
+
+# Count number of files
+count_label = tk.Label(analyze_frame, bg="#e7d3b0", text="number of files: 0")
+count_label.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
+
+# Button to File Audit
+fileaudit_button = tk.Button(
+    analyze_frame,
+    text="File Audit",
+    bg="#f07868",
+    command=lambda: apply_rename(result_textbox, path_files_entry),
+)
+fileaudit_button.grid(row=2, column=4, padx=5, pady=5, sticky="sew")
+
+# Labels for Missing and Extra Files
+missing_files_label = tk.Label(analyze_frame, text="Missing files", bg="#e7d3b0")
+missing_files_label.grid(row=3, column=0, padx=5, pady=5, sticky="w")
+
+extra_files_label = tk.Label(analyze_frame, text="Extra files", bg="#e7d3b0")
+extra_files_label.grid(row=3, column=2, padx=5, pady=5, sticky="w")
+
+# Frames for Textboxes
+missing_files_frame = tk.Frame(analyze_frame, bg="#e7d3b0")
+missing_files_frame.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+
+extra_files_frame = tk.Frame(analyze_frame, bg="#e7d3b0")
+extra_files_frame.grid(row=4, column=2, columnspan=2, padx=5, pady=5, sticky="nsew")
+
+# Missing Files Textbox + Scrollbar
+missing_files_textbox = tk.Text(missing_files_frame, height=10, width=30, bg="white", wrap="word")
+missing_files_textbox.grid(row=0, column=0, sticky="nsew")
+
+missing_files_scrollbar = tk.Scrollbar(missing_files_frame, orient="vertical", command=missing_files_textbox.yview)
+missing_files_scrollbar.grid(row=0, column=1, sticky="ns")
+
+missing_files_textbox.config(yscrollcommand=missing_files_scrollbar.set)
+
+# Extra Files Textbox + Scrollbar
+extra_files_textbox = tk.Text(extra_files_frame, height=10, width=30, bg="white", wrap="word")
+extra_files_textbox.grid(row=0, column=0, sticky="nsew")
+
+extra_files_scrollbar = tk.Scrollbar(extra_files_frame, orient="vertical", command=extra_files_textbox.yview)
+extra_files_scrollbar.grid(row=0, column=1, sticky="ns")
+
+extra_files_textbox.config(yscrollcommand=extra_files_scrollbar.set)
+
+# Make frames expandable
+missing_files_frame.grid_rowconfigure(0, weight=1)
+missing_files_frame.grid_columnconfigure(0, weight=1)
+
+extra_files_frame.grid_rowconfigure(0, weight=1)
+extra_files_frame.grid_columnconfigure(0, weight=1)
 
 ###################### MAIN WINDOW RESIZING ######################
 root.grid_rowconfigure(1, weight=1)  # Content frame resizable
