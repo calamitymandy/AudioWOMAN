@@ -1,11 +1,11 @@
 # settings.py for dmgbuild
 
 # Volume name
-volume_name = "AudioMAN"
+volume_name = "AudioWOMAN"
 
 # Path to the application to include in the DMG
 files = [
-    "dist/AudioMAN.app"  # Adjust the path if your .app is located elsewhere
+    "dist/AudioWOMAN.app"  # Adjust the path if your .app is located elsewhere
 ]
 
 # Disk image format (default is "UDZO")

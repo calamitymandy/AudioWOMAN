@@ -1,21 +1,21 @@
-# **AudioMAN Program - PROGRAMMER**
+# **AudioWOMAN Program - PROGRAMMER**
 
 ## **Actualize .exe:**
-pyinstaller --onefile --noconsole .\AudioMan.py
+pyinstaller --onefile --noconsole .\AudioWOMAN.py
 
 ## **Actualize .app & .dmg:**
-* pyinstaller --onefile --noconsole --windowed --name "AudioMan" AudioMan.py
-* dmgbuild -s settings.py "AudioMAN" dist/AudioMAN.dmg
+* pyinstaller --onefile --noconsole --windowed --name "AudioWOMAN" AudioWOMAN.py
+* dmgbuild -s settings.py "AudioWOMAN" dist/AudioWOMAN.dmg
 
 ------------------------------------------------------------------------
 
-# **AudioMAN Program - USER GUIDE**
+# **AudioWOMAN Program - USER GUIDE**
 
 ## **Overview**
 
 This tool streamlines file organization and batch renaming, ensuring efficiency and accuracy. 🚀
 
-AudioMAN is a user-friendly tool designed to generate file paths by combining multiple columns of text data. It ensures consistency while allowing flexibility in column inputs, making it ideal for batch processing and file organization. The program also allows users to modify paths through truncation or text replacement before applying the changes to actual files. Additionally, it provides an automated renaming feature that organizes files into structured directories based on the generated paths.
+AudioWOMAN is a user-friendly tool designed to generate file paths by combining multiple columns of text data. It ensures consistency while allowing flexibility in column inputs, making it ideal for batch processing and file organization. The program also allows users to modify paths through truncation or text replacement before applying the changes to actual files. Additionally, it provides an automated renaming feature that organizes files into structured directories based on the generated paths.
 
 ---
 
