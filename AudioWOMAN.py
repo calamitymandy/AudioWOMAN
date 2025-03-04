@@ -5,6 +5,8 @@ from utils import set_placeholder, update_id_column_label, update_textbox_label
 from modify_and_clear import clear_all, apply_truncation, apply_replace
 from create_and_generate import generate_paths, add_column, remove_column, copy_paths
 from rename_files import browse_files, apply_rename
+from media_info import apply_mediainfo
+from file_audit import perform_file_audit, export_audit_results
 
 def update_generate_button_position():
     """Update the position of the Generate Paths button."""
@@ -393,15 +395,6 @@ analyze_frame.grid_columnconfigure(3, weight=1)
 analyze_label = tk.Label(analyze_frame, bg="#e7d3b0", text="FILE AUDIT & MEDIA INFO")
 analyze_label.grid(row=0, column=0, columnspan=4, padx=5, pady=20, sticky="nsew")
 
-# Button Media info
-mediainfo_button = tk.Button(
-    analyze_frame,
-    text="Media info",
-    bg="#f07868",
-    command=lambda: apply_rename(result_textbox, path_files_entry),
-)
-mediainfo_button.grid(row=1, column=4, padx=5, pady=5, sticky="sew")
-
 # Folder selection
 analyze_files_label = tk.Label(analyze_frame, text="Folder to Audit:", bg="#e7d3b0")
 analyze_files_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
@@ -417,6 +410,15 @@ browse_button = tk.Button(
 )
 browse_button.grid(row=1, column=2, padx=5, pady=5, sticky="w")
 
+# Button Media info
+mediainfo_button = tk.Button(
+    analyze_frame,
+    text="Media info",
+    bg="#f07868",
+    command=lambda: apply_mediainfo(analyze_files_entry.get(), mediainfo_button),
+)
+mediainfo_button.grid(row=1, column=3, padx=5, pady=5, sticky="sew")
+
 # Count number of files
 count_label = tk.Label(analyze_frame, bg="#e7d3b0", text="number of files: 0")
 count_label.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
@@ -426,9 +428,9 @@ fileaudit_button = tk.Button(
     analyze_frame,
     text="File Audit",
     bg="#f07868",
-    command=lambda: apply_rename(result_textbox, path_files_entry),
+    command=lambda: perform_file_audit(result_textbox, analyze_files_entry.get(), missing_files_textbox, extra_files_textbox),
 )
-fileaudit_button.grid(row=2, column=4, padx=5, pady=5, sticky="sew")
+fileaudit_button.grid(row=2, column=3, padx=5, pady=5, sticky="sew")
 
 # Labels for Missing and Extra Files
 missing_files_label = tk.Label(analyze_frame, text="Missing files", bg="#e7d3b0")
@@ -468,6 +470,24 @@ missing_files_frame.grid_columnconfigure(0, weight=1)
 
 extra_files_frame.grid_rowconfigure(0, weight=1)
 extra_files_frame.grid_columnconfigure(0, weight=1)
+
+# Open Missing files button
+missing_button = tk.Button(
+    analyze_frame,
+    text="See Missing Files",
+    bg="#f07868",
+    command=lambda: export_audit_results(missing_files_textbox, missing=True),
+)
+missing_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+
+# Open extra files button
+extra_button = tk.Button(
+    analyze_frame,
+    text="See extra files",
+    bg="#f07868",
+    command=lambda: export_audit_results(extra_files_textbox, missing=False),
+)
+extra_button.grid(row=5, column=2, columnspan=2, padx=5, pady=5, sticky="nsew")
 
 ###################### MAIN WINDOW RESIZING ######################
 root.grid_rowconfigure(1, weight=1)  # Content frame resizable
