@@ -6,18 +6,18 @@ import shutil
 from tkinter import messagebox
 
 ###################### BROWSE ORI FILES FOR RENAMING ######################
-def browse_files(path_files_entry, count_label):
+def browse_files(analyze_files_entry, count_label_rename):
     """Open folder dialog, insert selected folder path, and count files (including subdirectories)."""
     files_in_folder = fd.askdirectory()  # Open folder dialog
     if files_in_folder:
-        path_files_entry.delete(0, tk.END)  # Clear existing text
-        path_files_entry.insert(0, files_in_folder)  # Insert selected folder path
+        analyze_files_entry.delete(0, tk.END)  # Clear existing text
+        analyze_files_entry.insert(0, files_in_folder)  # Insert selected folder path
 
         # Count all files (including in subdirectories)
         file_count = sum(len(files) for _, _, files in os.walk(files_in_folder))
 
         # Update label with the file count
-        count_label.config(text=f"copied files: {file_count}")
+        count_label_rename.config(text=f"number of files: {file_count}")
 
 ###################### DO RENAMING ######################
 

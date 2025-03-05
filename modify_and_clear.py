@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 
 ###################### APPLY CLEAR DATA ######################
-def clear_all(column_textboxes, extension_entry, result_textbox, result_label, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry, count_label):
+def clear_all(column_textboxes, extension_entry, result_textbox, result_label, id_column_selector, column_labels, set_placeholder, char_truncate_entry, char_specify_entry, truncate_dir_selector, ori_text_entry, dest_text_entry, path_files_entry, analyze_files_entry, count_label_rename, count_label_audit, missing_files_textbox, extra_files_textbox):
     """Clears all textboxes, extension field, and result area."""
     # Clear all column textboxes
     for textbox in column_textboxes:
@@ -25,8 +25,11 @@ def clear_all(column_textboxes, extension_entry, result_textbox, result_label, i
     ori_text_entry.delete(0, tk.END)
     dest_text_entry.delete(0, tk.END)
 
-    # Clear the rename area
+    # Clear the File audit & media info area
     path_files_entry.delete(0, tk.END)
+
+    # Clear the rename area
+    analyze_files_entry.delete(0, tk.END)
 
     # Reset the ID column selector
     id_column_selector.set("Select ID Column")
@@ -35,8 +38,17 @@ def clear_all(column_textboxes, extension_entry, result_textbox, result_label, i
     for i, label in enumerate(column_labels):
         label.config(text=f"Col {i + 1}:        0 lines")
     
-    # Reset the copied file label
-    count_label.config(text=f"copied files: 0")
+    # Reset the copied file label for rename
+    count_label_rename.config(text=f"number of files: 0")
+
+    # Reset the copied file label for audit
+    count_label_audit.config(text=f"number of files: 0")
+
+    # Clear the file audit & media info columns
+    missing_files_textbox.delete("1.0", tk.END)
+    extra_files_textbox.delete("1.0", tk.END)
+
+    
     
 ###################### APPLY TRUNCATION ######################
 def apply_truncation(result_textbox, char_entry, char_specify, direction_selector):
