@@ -209,11 +209,11 @@ add_column(column_textboxes, content_frame, column_labels, id_column_selector, u
 
 ###################### RESULT AREA WITH SCROLLBAR ######################
 result_label = tk.Label(content_frame, text="Result:        0 lines", bg="#e7d3b0")
-result_label.grid(row=5, column=0, padx=5, pady=5, sticky="w")
+result_label.grid(row=6, column=0, padx=5, pady=5, sticky="w")
 
 # Create a frame for the result area and scrollbar
 result_frame = tk.Frame(content_frame, bg="#e7d3b0")
-result_frame.grid(row=6, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
+result_frame.grid(row=7, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
 # Add the Text widget inside the frame
 result_textbox = tk.Text(result_frame, height=10, width=100, bg="#e7d3b0", wrap="word")
@@ -236,7 +236,7 @@ result_frame.grid_columnconfigure(0, weight=1)
 ###################### TRUNCATION AREA ######################
 # Frame for truncation inputs
 truncate_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=10)
-truncate_frame.grid(row=7, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
+truncate_frame.grid(row=8, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
 # Add truncation controls inside the frame
 truncate_label = tk.Label(truncate_frame, bg="#e7d3b0", text="TRUNCATE ->")
@@ -278,7 +278,7 @@ truncate_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 ###################### REPLACE ALL AREA ######################
 # Frame for replace inputs
 replace_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=10)
-replace_frame.grid(row=8, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
+replace_frame.grid(row=9, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
 # Add replace controls inside the frame
 replace_label = tk.Label(replace_frame, bg="#e7d3b0", text="REPLACE ALL ->")
@@ -310,7 +310,7 @@ replace_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 ###################### PARTIAL REPLACE AREA ######################
 # Frame for partial replace inputs
 partial_replace_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=10)
-partial_replace_frame.grid(row=9, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
+partial_replace_frame.grid(row=10, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
 # Add replace controls inside the frame
 partial_replace_label = tk.Label(partial_replace_frame, bg="#e7d3b0", text="PARTIAL REPLACE ->")
@@ -343,7 +343,7 @@ partial_replace_button.grid(row=0, column=6, padx=5, pady=5, sticky="w")
 ###################### RENAME AREA ######################
 # Frame for rename inputs
 rename_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=15)
-rename_frame.grid(row=10, column=0, columnspan=2, padx=5, pady=5, sticky="new")
+rename_frame.grid(row=11, column=0, columnspan=2, padx=5, pady=5, sticky="new")
 
 # Configure columns to expand evenly
 rename_frame.grid_columnconfigure(0, weight=1)
@@ -386,7 +386,7 @@ rename_button.grid(row=4, column=0, columnspan=2, padx=5, pady=20, sticky="sew")
 ###################### FILEAUDIT & MEDIAINFO AREA ######################
 # Frame for inputs
 analyze_frame = tk.Frame(content_frame, bg="#e7d3b0", highlightbackground="#2197a3", highlightthickness=1, bd=15)
-analyze_frame.grid(row=10, column=2, columnspan=4, padx=5, pady=5, sticky="new")
+analyze_frame.grid(row=11, column=2, columnspan=4, padx=5, pady=5, sticky="new")
 
 # Configure columns to expand evenly
 analyze_frame.grid_columnconfigure(0, weight=1)

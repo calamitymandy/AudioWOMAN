@@ -69,6 +69,16 @@ To generate your list of path you can choose one of thes two options:
   - Click **"Generate New Paths"** to create concatenated paths. The results will appear in the **Result** area and will overwrite whatever was already in the result area.
   - Click **"Add More Paths"** to add concatenated paths below the one that are already in the **Result** area.
 
+## **Results**
+
+- Generated or modified paths (or manually entered paths) appear in the **Result** area.
+- Example output for three columns (`Col 1`, `Col 2`, `Col 3`) with a `.txt` extension:
+  ```
+  value1_part1_value2.txt
+  value1_part2_value2.txt
+  value1_part3_value2.txt
+  ```
+
 ---
 
 ### **Truncate Paths**
@@ -98,7 +108,7 @@ Finds and replaces specific text in file paths.
 2. Enter the new text (or nothing if you want to erase the text you entered).
 3. Click **"Apply Replace"**.
 
-💡 **Tip:** Use this to adjust filenames or modify folder names before renaming.
+💡 **Tip:** Tip: Use this to cut parts of your path (e.g. replace “/001/” by nothing).
 
 ⚠ **Important:** 
 - For the “Replace All” option, the program searches for the first occurrence of the text you entered.  If the text isn’t found in all paths, an error will be displayed.
@@ -154,18 +164,6 @@ If discrepancies are found, a detailed report will be displayed and can be saved
 Resets all text fields, selections, and settings, clearing any loaded paths.
 
 💡 **Use this when:** You want to start over with a clean slate.
-
----
-
-## **Results**
-
-- Generated or modified paths (or manually entered paths) appear in the **Result** area.
-- Example output for three columns (`Col 1`, `Col 2`, `Col 3`) with a `.txt` extension:
-  ```
-  value1_part1_value2.txt
-  value1_part2_value2.txt
-  value1_part3_value2.txt
-  ```
 
 ---
 
