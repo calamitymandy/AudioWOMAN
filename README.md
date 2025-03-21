@@ -15,7 +15,12 @@ pyinstaller --onefile --noconsole .\AudioWOMAN.py
 
 This tool streamlines file organization and batch renaming, ensuring efficiency and accuracy. 🚀
 
-AudioWOMAN is a user-friendly tool designed to generate file paths by combining multiple columns of text data. It ensures consistency while allowing flexibility in column inputs, making it ideal for batch processing and file organization. The program also allows users to modify paths through truncation or text replacement before applying the changes to actual files. Additionally, it provides an automated renaming feature that organizes files into structured directories based on the generated paths.
+AudioWOMAN is a tool designed for efficient file path generation, modification, and renaming. By combining multiple columns of text data, it ensures consistency while allowing flexibility in column inputs—making it ideal for batch processing and file organization.
+
+The program includes tools to modify paths through truncation or text replacement before applying changes to actual files. 
+
+It also features an automated renaming system that organizes files into structured directories based on the generated paths, and 2 tools for analyzing data: file audit and media info.
+
 
 ---
 
@@ -28,6 +33,8 @@ AudioWOMAN is a user-friendly tool designed to generate file paths by combining 
 - **Path Truncation**: Remove parts of a file path based on a specific character or a defined number of characters.
 - **Text Replacement in Paths**: Quickly find and replace specific text within file paths.
 - **Automated File Renaming**: Copy files into a structured `_renamed` folder and rename them based on generated paths, preserving subdirectories when necessary.
+- **File Audit**: Compare filenames from a list with files in a selected folder, identifying missing and extra files.
+- **Media Info**: Checks all audio files in a selected directory for uniformity in sampling rate, bit depth, and number of channels.
 - **Error Handling**: Built-in warnings and error messages guide users through column mismatches or invalid inputs.
 
 ---
@@ -114,6 +121,32 @@ Copies all files from a selected folder to a new `_renamed` folder and renames t
 ⚠ **Important:** Ensure the number of copied files matches the number of paths to avoid errors.
 
 ---
+
+### **File Audit**
+🔹 **What it does:**
+Compares filenames from the generated paths with actual files in a selected folder, identifying missing and extra files.
+
+📌 Steps:
+1.	Put the list of filenames in result textbox (copy/paste it or generate it)
+⚠ **Important:** Ensure the list of filenames contains the exact name of the files with the extension (e.g. “name_of_the_audio_file.wav”)
+2.	Select a folder to analyze.
+3.	Click on button **"File Audit"**.
+4.	The program will compare the generated paths with actual filenames and display missing and extra files.
+You can export the results as a text files.
+
+---
+
+### **Media Info**
+
+🔹 **What it does:**
+Checks all audio files in a selected directory for uniformity in sampling rate, bit depth, and number of channels.
+
+📌 Steps:
+1.	Select a folder containing audio files.
+2.	Click on button **"Media Info"**.
+3.	The program will check if all files have the same parameters.
+If discrepancies are found, a detailed report will be displayed and can be saved.
+
 
 ### **Clear All: Reset Everything**
 
