@@ -1,7 +1,8 @@
 # **AudioWOMAN Program - PROGRAMMER**
 
 ## **Actualize .exe:**
-pyinstaller --onefile --noconsole .\AudioWOMAN.py
+* pyinstaller --onefile --noconsole .\AudioWOMAN.py
+* *OR* pyinstaller --onefile --windowed --hidden-import pymediainfo --name "AudioWOMAN" AudioWOMAN.py
 
 ## **Actualize .app & .dmg:**
 * pyinstaller --onefile --noconsole --windowed --name "AudioWOMAN" AudioWOMAN.py
