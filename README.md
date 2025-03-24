@@ -5,6 +5,7 @@ pyinstaller --onefile --noconsole .\AudioWOMAN.py
 
 ## **Actualize .app & .dmg:**
 * pyinstaller --onefile --noconsole --windowed --name "AudioWOMAN" AudioWOMAN.py
+* *OR* pyinstaller --onefile --windowed --hidden-import=pymediainfo AudioWOMAN.py
 * dmgbuild -s settings.py "AudioWOMAN" dist/AudioWOMAN.dmg
 
 ------------------------------------------------------------------------
