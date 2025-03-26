@@ -173,9 +173,6 @@ def on_trackpad_scroll(event):
 
 canvas.bind_all("<Motion>", on_trackpad_scroll)  # Trackpad two-finger gesture
 
-
-
-
 # Configure the content frame for a maximum of 6 columns
 for col in range(6):
     content_frame.grid_columnconfigure(col, weight=1, uniform="fixed_columns")
@@ -214,7 +211,8 @@ generate_add_button = tk.Button(
         update_textbox_label, 
         append=True
         ), 
-    bg="#f07868"
+    bg="#f07868",
+    highlightbackground="#ebb970"
     )
 generate_add_button.grid(row=4, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
 
