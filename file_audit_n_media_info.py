@@ -66,10 +66,17 @@ def export_audit_results(textbox, missing):
     
     # Create a unique temporary file name using the current timestamp
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
-    if missing:
-        temp_file_path = os.path.join("/tmp", f"missing_files_{timestamp}.txt")  # macOS/Linux temp folder
-    else:
-        temp_file_path = os.path.join("/tmp", f"extra_files_{timestamp}.txt")
+
+    if platform.system() == "Windows":
+        if missing:
+            temp_file_path = os.path.join(os.getenv("TEMP"), f"missing_files.txt")
+        else:
+            temp_file_path = os.path.join(os.getenv("TEMP"), f"extra_files.txt")
+    elif platform.system() == "Darwin":  # macOS
+        if missing:
+            temp_file_path = os.path.join("/tmp", f"missing_files_{timestamp}.txt")  # macOS/Linux temp folder
+        else:
+            temp_file_path = os.path.join("/tmp", f"extra_files_{timestamp}.txt")
     
     # Write the contents of the textboxes into the temp file
     with open(temp_file_path, "w") as file:
@@ -77,7 +84,11 @@ def export_audit_results(textbox, missing):
     
     # Detect OS and open file in appropriate editor
     if platform.system() == "Windows":
-        subprocess.Popen(["notepad.exe", temp_file_path])  # Open in Notepad (Windows)
+        notepad_path = "C:\\Windows\\System32\\notepad.exe"  # Full path to Notepad
+        try:
+            subprocess.Popen([notepad_path, temp_file_path])  # Use Popen to not block the rest of the code
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"Failed to open Notepad: {e}")
     elif platform.system() == "Darwin":  # macOS
         subprocess.Popen(["open", "-a", "TextEdit", temp_file_path])  # Open in TextEdit
     else:
