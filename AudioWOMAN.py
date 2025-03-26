@@ -153,14 +153,28 @@ def on_content_resize(event):
 
 canvas.bind("<Configure>", on_content_resize)
 
-# Enable mouse wheel scrolling for the canvas
 def on_mouse_wheel(event):
-    """Scroll vertically with the mouse wheel."""
-    canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+    """Enable smooth scrolling for macOS trackpad and mouse wheel."""
+    if event.num == 5 or event.delta < 0:  # Scroll down
+        canvas.yview_scroll(1, "units")
+    elif event.num == 4 or event.delta > 0:  # Scroll up
+        canvas.yview_scroll(-1, "units")
 
-canvas.bind_all("<MouseWheel>", on_mouse_wheel)  # For Windows and MacOS
-canvas.bind_all("<Button-4>", lambda e: canvas.yview_scroll(-1, "units"))  # For Linux
-canvas.bind_all("<Button-5>", lambda e: canvas.yview_scroll(1, "units"))  # For Linux
+# Detect macOS gestures properly
+canvas.bind_all("<MouseWheel>", on_mouse_wheel)  # Windows/macOS scrolling
+canvas.bind_all("<Shift-MouseWheel>", on_mouse_wheel)  # Enable horizontal scrolling
+canvas.bind_all("<Button-4>", lambda e: canvas.yview_scroll(-1, "units"))  # Linux Scroll Up
+canvas.bind_all("<Button-5>", lambda e: canvas.yview_scroll(1, "units"))  # Linux Scroll Down
+
+# NEW: Detect trackpad two-finger gestures explicitly
+def on_trackpad_scroll(event):
+    """Mac trackpad gesture support using delta movement."""
+    canvas.yview_scroll(-int(event.delta / 60), "units")
+
+canvas.bind_all("<Motion>", on_trackpad_scroll)  # Trackpad two-finger gesture
+
+
+
 
 # Configure the content frame for a maximum of 6 columns
 for col in range(6):

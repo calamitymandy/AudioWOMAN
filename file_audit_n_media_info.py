@@ -1,10 +1,12 @@
 import os
 import subprocess
+import platform
 import tkinter as tk
 import tkinter.filedialog as fd
 from datetime import datetime
 from pymediainfo import MediaInfo
 from tkinter import messagebox, filedialog
+
 
 ###################### BROWSE FILES ######################
 def browse_files_Audit(analyze_files_entry, count_label_audit, missing_files_textbox, extra_files_textbox):
@@ -60,21 +62,27 @@ def perform_file_audit(result_textbox, folder_path, missing_textbox, extra_textb
         extra_textbox.insert(tk.END, "No extra files")
 
 def export_audit_results(textbox, missing):
-    """Open the audit results in Notepad with a unique name."""
+    """Open the audit results in Notepad (Windows) or TextEdit (macOS) with a unique name."""
     
     # Create a unique temporary file name using the current timestamp
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
     if missing:
-        temp_file_path = os.path.join(os.getenv("TEMP"), f"missing_files.txt")
+        temp_file_path = os.path.join("/tmp", f"missing_files_{timestamp}.txt")  # macOS/Linux temp folder
     else:
-        temp_file_path = os.path.join(os.getenv("TEMP"), f"extra_files.txt")
+        temp_file_path = os.path.join("/tmp", f"extra_files_{timestamp}.txt")
     
     # Write the contents of the textboxes into the temp file
     with open(temp_file_path, "w") as file:
         file.write(textbox.get("1.0", "end-1c").strip() + "\n")
     
-    # Open the temporary file in Notepad (new instance)
-    subprocess.Popen(["notepad.exe", temp_file_path])
+    # Detect OS and open file in appropriate editor
+    if platform.system() == "Windows":
+        subprocess.Popen(["notepad.exe", temp_file_path])  # Open in Notepad (Windows)
+    elif platform.system() == "Darwin":  # macOS
+        subprocess.Popen(["open", "-a", "TextEdit", temp_file_path])  # Open in TextEdit
+    else:
+        subprocess.Popen(["xdg-open", temp_file_path])  # Linux (for compatibility)
+
 
 ###################### MEDIA INFO ######################
 def apply_mediainfo(folder_path, button):
