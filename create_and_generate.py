@@ -67,7 +67,7 @@ def add_column(column_textboxes, content_frame, column_labels, id_column_selecto
     frame.grid(row=grid_row * 2, column=grid_col, padx=5, pady=5, sticky="nsew")
 
     # Add a Text widget
-    new_textbox = tk.Text(frame, height=10, width=30, bg="#e7d3b0", wrap="word")
+    new_textbox = tk.Text(frame, height=10, width=30, bg="#e7d3b0", highlightbackground="#e7d3b0", wrap="word")
     new_textbox.grid(row=0, column=0, sticky="nsew")
 
     # Add a vertical scrollbar

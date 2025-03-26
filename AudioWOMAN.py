@@ -233,7 +233,7 @@ result_frame = tk.Frame(content_frame, bg="#e7d3b0")
 result_frame.grid(row=7, column=0, columnspan=6, padx=5, pady=5, sticky="nsew")
 
 # Add the Text widget inside the frame
-result_textbox = tk.Text(result_frame, height=10, width=100, bg="#e7d3b0", wrap="word")
+result_textbox = tk.Text(result_frame, height=10, width=100, bg="#e7d3b0", highlightbackground="#e7d3b0", wrap="word")
 result_textbox.grid(row=0, column=0, sticky="nsew")
 
 # Update the label dynamically
@@ -476,7 +476,7 @@ extra_files_label = tk.Label(extra_files_frame, text="Extra files", bg="#e7d3b0"
 extra_files_label.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
 
 # Missing Files Textbox + Scrollbar
-missing_files_textbox = tk.Text(missing_files_frame, height=8, width=30, bg="white", wrap="word")
+missing_files_textbox = tk.Text(missing_files_frame, height=8, width=30, bg="white", highlightbackground="white", wrap="word")
 missing_files_textbox.grid(row=1, column=0, pady=5, sticky="nsew")
 
 missing_files_scrollbar = tk.Scrollbar(missing_files_frame, orient="vertical", command=missing_files_textbox.yview)
@@ -485,7 +485,7 @@ missing_files_scrollbar.grid(row=1, column=1, pady=5, sticky="ns")
 missing_files_textbox.config(yscrollcommand=missing_files_scrollbar.set)
 
 # Extra Files Textbox + Scrollbar
-extra_files_textbox = tk.Text(extra_files_frame, height=8, width=30, bg="white", wrap="word")
+extra_files_textbox = tk.Text(extra_files_frame, height=8, width=30, bg="white", highlightbackground="white", wrap="word")
 extra_files_textbox.grid(row=1, column=0, pady=5, sticky="nsew")
 
 extra_files_scrollbar = tk.Scrollbar(extra_files_frame, orient="vertical", command=extra_files_textbox.yview)
