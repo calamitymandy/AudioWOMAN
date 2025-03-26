@@ -39,7 +39,8 @@ add_column_button = tk.Button(
     text="Add Column", 
     command=lambda: add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position, update_textbox_label), 
     bg="#f07868", 
-    fg="black"
+    fg="black",
+    highlightbackground="#2197a3"
     )
 add_column_button.grid(row=0, column=0, padx=5, pady=5)
 
@@ -49,7 +50,8 @@ remove_column_button = tk.Button(
     text="Remove Column", 
     command=lambda: remove_column(column_textboxes, column_labels, id_column_selector, update_generate_button_position), 
     bg="#f07868", 
-    fg="black"
+    fg="black",
+    highlightbackground="#2197a3"
     )
 remove_column_button.grid(row=0, column=1, padx=5, pady=5)
 
@@ -62,24 +64,25 @@ id_column_selector.set("Select ID Column")
 id_column_selector['values'] = []  # Initialize empty
 id_column_selector.bind(
     "<<ComboboxSelected>>",
-    lambda event: update_id_column_label(column_labels, column_textboxes, id_column_selector, update_textbox_label),
+    lambda event: update_id_column_label(column_labels, column_textboxes, id_column_selector, update_textbox_label)
 )
 
 # Extension entry #
-extension_entry = tk.Entry(nav_bar)
+extension_entry = tk.Entry(nav_bar, highlightbackground="#2197a3")
 extension_entry.grid(row=0, column=3, padx=5, pady=5)
 
 # placeholder for the extension_entry
 set_placeholder(extension_entry, "Extension (ex: .wav)")
 
 # Copy paths from directory #
-browse_button = tk.Button(
+copy_path_button = tk.Button(
     nav_bar, 
     text="Copy all paths from directory", 
-    bg="#f07868", 
+    bg="#f07868",
+    highlightbackground="#2197a3",
     command=lambda: copy_paths(column_textboxes, column_labels, update_textbox_label)
     )
-browse_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
+copy_path_button.grid(row=0, column=4, padx=5, pady=5, sticky="nsew")
 
 ## CLEAR DATA BUTTON ##
 clear_button = tk.Button(
@@ -106,7 +109,8 @@ clear_button = tk.Button(
         extra_files_textbox
         ),
     bg="#f71e6c", 
-    fg="black"
+    fg="black",
+    highlightbackground="#2197a3"
 )
 clear_button.grid(row=0, column=5, padx=5, pady=5, rowspan=2)
 
@@ -194,7 +198,8 @@ generate_new_button = tk.Button(
         update_textbox_label, 
         append=False
         ), 
-    bg="#f07868"
+    bg="#f07868",
+    highlightbackground="#ebb970"
     )
 generate_new_button.grid(row=4, column=0, columnspan=2, padx=5, pady=10, sticky="ew")
 
@@ -216,7 +221,7 @@ generate_add_button = tk.Button(
     )
 generate_add_button.grid(row=4, column=2, columnspan=2, padx=5, pady=10, sticky="ew")
 
-## Add the first two columns ##
+## Add the first column ##
 add_column(column_textboxes, content_frame, column_labels, id_column_selector, update_generate_button_position, update_textbox_label)
 
 ###################### RESULT AREA WITH SCROLLBAR ######################
@@ -257,13 +262,13 @@ truncate_label.grid(row=0, column=0, padx=50, pady=5, sticky="nsew")
 # Input for number of characters to truncate
 char_truncate_label = tk.Label(truncate_frame, text="Truncate # Chars:", bg="#e7d3b0")
 char_truncate_label.grid(row=0, column=1, padx=5, pady=5, sticky="e")
-char_truncate_entry = tk.Entry(truncate_frame, width=10)
+char_truncate_entry = tk.Entry(truncate_frame, width=10, highlightbackground="#e7d3b0")
 char_truncate_entry.grid(row=0, column=2, padx=5, pady=5, sticky="w")
 
 # Input for specific character to truncate up to
 char_specify_label = tk.Label(truncate_frame, text="Truncate Up To Char:", bg="#e7d3b0")
 char_specify_label.grid(row=0, column=3, padx=5, pady=5, sticky="e")
-char_specify_entry = tk.Entry(truncate_frame, width=10)
+char_specify_entry = tk.Entry(truncate_frame, width=10, highlightbackground="#e7d3b0")
 char_specify_entry.grid(row=0, column=4, padx=5, pady=5, sticky="w")
 
 # Options for truncation direction
@@ -281,6 +286,7 @@ truncate_button = tk.Button(
     truncate_frame,
     text="Apply Truncation",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: apply_truncation(
         result_textbox, char_truncate_entry, char_specify_entry, truncate_dir_selector
     ),
@@ -299,13 +305,13 @@ replace_label.grid(row=0, column=0, padx=50, pady=5, sticky="nsew")
 # Input for the characters to replace
 ori_text_label = tk.Label(replace_frame, text="Replace this:", bg="#e7d3b0")
 ori_text_label.grid(row=0, column=1, padx=5, pady=5, sticky="e")
-ori_text_entry = tk.Entry(replace_frame, width=10)
+ori_text_entry = tk.Entry(replace_frame, width=10, highlightbackground="#e7d3b0")
 ori_text_entry.grid(row=0, column=2, padx=5, pady=5, sticky="w")
 
 # Input for the characters we want
 dest_text_label = tk.Label(replace_frame, text="By that:", bg="#e7d3b0")
 dest_text_label.grid(row=0, column=3, padx=5, pady=5, sticky="e")
-dest_text_entry = tk.Entry(replace_frame, width=10)
+dest_text_entry = tk.Entry(replace_frame, width=10, highlightbackground="#e7d3b0")
 dest_text_entry.grid(row=0, column=4, padx=5, pady=5, sticky="w")
 
 # Button to apply replacing
@@ -313,6 +319,7 @@ replace_button = tk.Button(
     replace_frame,
     text="Replace",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: apply_replace(
         result_textbox, ori_text_entry, dest_text_entry, strict_mode=True
     ),
@@ -331,20 +338,21 @@ partial_replace_label.grid(row=0, column=0, padx=50, pady=5, sticky="nsew")
 # Input for the characters to replace
 partial_ori_text_label = tk.Label(partial_replace_frame, text="Find this:", bg="#e7d3b0")
 partial_ori_text_label.grid(row=0, column=1, padx=5, pady=5, sticky="e")
-partial_ori_text_entry = tk.Entry(partial_replace_frame, width=10)
+partial_ori_text_entry = tk.Entry(partial_replace_frame, width=10, highlightbackground="#e7d3b0")
 partial_ori_text_entry.grid(row=0, column=2, padx=5, pady=5, sticky="w")
 
 # Input for the characters we want
 partial_dest_text_label = tk.Label(partial_replace_frame, text="Replace it by that:", bg="#e7d3b0")
 partial_dest_text_label.grid(row=0, column=3, padx=5, pady=5, sticky="e")
-partial_dest_text_entry = tk.Entry(partial_replace_frame, width=10)
+partial_dest_text_entry = tk.Entry(partial_replace_frame, width=10, highlightbackground="#e7d3b0")
 partial_dest_text_entry.grid(row=0, column=4, padx=5, pady=5, sticky="w")
 
-# Button to apply replacing
+# Button to apply partial replacing
 partial_replace_button = tk.Button(
     partial_replace_frame,
     text="Partial Replace",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: apply_replace(
         result_textbox, partial_ori_text_entry, partial_dest_text_entry, strict_mode=False
     ),
@@ -368,14 +376,16 @@ rename_label.grid(row=0, column=0, columnspan=2, padx=5, pady=20, sticky="nsew")
 # Input for the files to rename
 path_files_label = tk.Label(rename_frame, text="Replace from path:", bg="#e7d3b0")
 path_files_label.grid(row=1, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
-path_files_entry = tk.Entry(rename_frame, width=40)  # Increased width
+path_files_entry = tk.Entry(rename_frame, width=40, highlightbackground="#e7d3b0")  # Increased width
 path_files_entry.grid(row=2, column=0, padx=5, pady=5, sticky="e")
 
 # Browse button
 browse_button = tk.Button(
     rename_frame, 
     text="Browse", 
-    bg="#f07868", 
+    bg="#f07868",
+    highlightbackground="#e7d3b0",
+    width=10,
     command=lambda: browse_files(path_files_entry, count_label_rename)
     )
 browse_button.grid(row=2, column=1, padx=5, pady=5, sticky="w")
@@ -389,6 +399,7 @@ rename_button = tk.Button(
     rename_frame,
     text="Rename",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: apply_rename(
         result_textbox, path_files_entry
     ),
@@ -413,7 +424,7 @@ analyze_label.grid(row=0, column=0, columnspan=4, padx=5, pady=20, sticky="nsew"
 # Folder selection
 analyze_files_label = tk.Label(analyze_frame, text="Folder to Audit:", bg="#e7d3b0")
 analyze_files_label.grid(row=1, column=0, padx=5, pady=5, sticky="e")
-analyze_files_entry = tk.Entry(analyze_frame)
+analyze_files_entry = tk.Entry(analyze_frame, highlightbackground="#e7d3b0")
 analyze_files_entry.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
 # Browse button
@@ -421,6 +432,7 @@ browse_button = tk.Button(
     analyze_frame,
     text="Browse",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: browse_files_Audit(analyze_files_entry, count_label_audit, missing_files_textbox, extra_files_textbox),
 )
 browse_button.grid(row=1, column=2, padx=5, pady=5, sticky="w")
@@ -430,6 +442,7 @@ mediainfo_button = tk.Button(
     analyze_frame,
     text="Media info",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: apply_mediainfo(analyze_files_entry.get(), mediainfo_button),
 )
 mediainfo_button.grid(row=1, column=3, padx=5, pady=5, sticky="sew")
@@ -443,6 +456,7 @@ fileaudit_button = tk.Button(
     analyze_frame,
     text="File Audit",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: perform_file_audit(result_textbox, analyze_files_entry.get(), missing_files_textbox, extra_files_textbox),
 )
 fileaudit_button.grid(row=2, column=3, padx=5, pady=5, sticky="sew")
@@ -484,6 +498,7 @@ missing_button = tk.Button(
     missing_files_frame,
     text="See Missing Files",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: export_audit_results(missing_files_textbox, missing=True),
 )
 missing_button.grid(row=2, column=0, columnspan=2, padx=100, pady=5, sticky="nsew")
@@ -493,6 +508,7 @@ extra_button = tk.Button(
     extra_files_frame,
     text="See extra files",
     bg="#f07868",
+    highlightbackground="#e7d3b0",
     command=lambda: export_audit_results(extra_files_textbox, missing=False),
 )
 extra_button.grid(row=2, column=0, columnspan=2, padx=100, pady=5, sticky="nsew")
