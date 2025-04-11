@@ -1,6 +1,8 @@
 import os
+import sys
 import subprocess
 import platform
+import re
 import tkinter as tk
 import tkinter.filedialog as fd
 from datetime import datetime
@@ -25,6 +27,93 @@ def browse_files_Audit(analyze_files_entry, count_label_audit, missing_files_tex
 
         # Update label with the file count
         count_label_audit.config(text=f"number of files: {file_count}")
+
+###################### LUFS ######################
+
+def get_ffmpeg_path():
+    """Detect platform and return the correct ffmpeg binary path."""
+    if sys.platform.startswith("win"):
+        return os.path.join("ffmpeg_bin", "ffmpeg.exe")
+    elif sys.platform.startswith("darwin"):
+        return os.path.join("ffmpeg_bin", "ffmpeg")
+    else:
+        raise EnvironmentError("Unsupported OS")
+
+def analyze_file(file_path):
+    """Run ffmpeg loudnorm filter and return LUFS and True Peak."""
+    ffmpeg_path = get_ffmpeg_path()
+    
+    cmd = [
+        ffmpeg_path,
+        "-i", file_path,
+        "-filter_complex", "loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary",
+        "-f", "null", "-"
+    ]
+
+    result = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL, text=True, check=True)
+    stderr = result.stderr
+
+    # Parse Integrated loudness (I) and True Peak (TP)
+    integrated = None
+    true_peak = None
+    for line in stderr.splitlines():
+        if "Input Integrated:" in line:
+            integrated = float(line.split(":")[1].strip().replace("LUFS", "").strip())
+        if "Input True Peak:" in line:
+            true_peak_str = line.split(":")[1].strip()
+            true_peak_str = true_peak_str.replace("dB", "").replace("TP", "").strip()  # Clean extra characters
+            
+            try:
+                true_peak = float(true_peak_str)
+            except ValueError:
+                print(f"Could not convert True Peak value '{true_peak_str}' to float.")
+
+    return integrated, true_peak
+
+
+
+def check_lufs(folder_path, button):
+    """Analyze LUFS and true peak of audio files and show min/max summary."""
+    if not os.path.isdir(folder_path):
+        messagebox.showerror("Error", "Invalid folder path.")
+        return
+
+    original_text = button["text"]
+    button.config(text="Processing...", state="disabled")
+    button.update_idletasks()
+
+    audio_extensions = {".wav", ".flac", ".mp3", ".aac", ".m4a", ".ogg", ".wma"}
+    lufs_values = []
+    peak_values = []
+
+    try:
+        for root, _, files in os.walk(folder_path):
+            for file in files:
+                if os.path.splitext(file)[1].lower() not in audio_extensions:
+                    continue
+
+                file_path = os.path.join(root, file)
+                try:
+                    lufs, peak = analyze_file(file_path)
+                    if lufs is not None and peak is not None:
+                        lufs_values.append(lufs)
+                        peak_values.append(peak)
+                except Exception as e:
+                    print(f"Error analyzing {file_path}: {e}")
+
+        if not lufs_values or not peak_values:
+            messagebox.showwarning("Warning", "No LUFS data could be retrieved.")
+        else:
+            msg = (
+                f"LUFS:\n  Min: {min(lufs_values):.2f} LUFS\n  Max: {max(lufs_values):.2f} LUFS\n\n"
+                f"True Peak:\n  Min: {min(peak_values):.2f} dB\n  Max: {max(peak_values):.2f} dB"
+            )
+            messagebox.showinfo("LUFS & True Peak Analysis", msg)
+
+    finally:
+        button.config(text=original_text, state="normal")
+
+
 
 ###################### FILE AUDIT ######################
 def get_filenames_from_textbox(textbox):

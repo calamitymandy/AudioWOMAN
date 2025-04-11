@@ -1,11 +1,45 @@
 import tkinter as tk
 from tkinter import ttk
+import sys
+import os
+import shutil
+
 
 from utils import set_placeholder, update_id_column_label, update_textbox_label
 from modify_and_clear import clear_all, apply_truncation, apply_replace
 from create_and_generate import generate_paths, add_column, remove_column, copy_paths
 from rename_files import browse_files, apply_rename
-from file_audit_n_media_info import perform_file_audit, export_audit_results, browse_files_Audit, apply_mediainfo
+from file_audit_n_media_info import perform_file_audit, export_audit_results, browse_files_Audit, apply_mediainfo, check_lufs
+
+def get_ffmpeg_path():
+    """Detect platform and return the correct ffmpeg binary path."""
+    if getattr(sys, 'frozen', False):  # Si estamos ejecutando el archivo empaquetado
+        # Usamos _MEIPASS para obtener la ruta donde PyInstaller extrae los archivos
+        temp_dir = sys._MEIPASS
+        ffmpeg_path = os.path.join(temp_dir, 'ffmpeg.exe')
+    else:
+        # Si estamos en desarrollo, buscamos el binario en el directorio local
+        ffmpeg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ffmpeg_bin', 'ffmpeg.exe')
+    
+    return ffmpeg_path
+
+
+# Llamamos a la función para obtener la ruta de ffmpeg.exe
+ffmpeg_path = get_ffmpeg_path()
+
+if os.path.exists(ffmpeg_path):
+    print(f"FFmpeg encontrado en: {ffmpeg_path}")
+else:
+    print("No se encontró ffmpeg.exe.")
+
+def check_ffmpeg():
+    ffmpeg_path = get_ffmpeg_path()
+    print(f"Buscando ffmpeg.exe en: {ffmpeg_path}")
+    if os.path.exists(ffmpeg_path):
+        print(f"FFmpeg encontrado en: {ffmpeg_path}")
+    else:
+        print(f"No se encontró ffmpeg.exe en: {ffmpeg_path}")
+
 
 def update_generate_button_position():
     """Update the position of the Generate Paths button."""
@@ -437,6 +471,20 @@ browse_button = tk.Button(
 )
 browse_button.grid(row=1, column=2, padx=5, pady=5, sticky="w")
 
+# Count number of files
+count_label_audit = tk.Label(analyze_frame, bg="#e7d3b0", text="number of files: 0")
+count_label_audit.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
+
+# Button LUFS
+lufs_button = tk.Button(
+    analyze_frame,
+    text="LUFS",
+    bg="#f07868",
+    highlightbackground="#e7d3b0",
+    command=lambda: check_lufs(analyze_files_entry.get(), lufs_button),
+)
+lufs_button.grid(row=1, column=3, padx=5, pady=5, sticky="sew")
+
 # Button Media info
 mediainfo_button = tk.Button(
     analyze_frame,
@@ -445,13 +493,9 @@ mediainfo_button = tk.Button(
     highlightbackground="#e7d3b0",
     command=lambda: apply_mediainfo(analyze_files_entry.get(), mediainfo_button),
 )
-mediainfo_button.grid(row=1, column=3, padx=5, pady=5, sticky="sew")
+mediainfo_button.grid(row=2, column=3, padx=5, pady=5, sticky="sew")
 
-# Count number of files
-count_label_audit = tk.Label(analyze_frame, bg="#e7d3b0", text="number of files: 0")
-count_label_audit.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
-
-# Button to File Audit
+# Button File Audit
 fileaudit_button = tk.Button(
     analyze_frame,
     text="File Audit",
@@ -459,7 +503,7 @@ fileaudit_button = tk.Button(
     highlightbackground="#e7d3b0",
     command=lambda: perform_file_audit(result_textbox, analyze_files_entry.get(), missing_files_textbox, extra_files_textbox),
 )
-fileaudit_button.grid(row=2, column=3, padx=5, pady=5, sticky="sew")
+fileaudit_button.grid(row=3, column=3, padx=5, pady=5, sticky="sew")
 
 # Frames for Textboxes
 missing_files_frame = tk.Frame(analyze_frame, bg="#e7d3b0")
