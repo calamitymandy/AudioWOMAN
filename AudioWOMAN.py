@@ -11,34 +11,14 @@ from create_and_generate import generate_paths, add_column, remove_column, copy_
 from rename_files import browse_files, apply_rename
 from file_audit_n_media_info import perform_file_audit, export_audit_results, browse_files_Audit, apply_mediainfo, check_lufs
 
-def get_ffmpeg_path():
-    """Detect platform and return the correct ffmpeg binary path."""
-    if getattr(sys, 'frozen', False):  # Si estamos ejecutando el archivo empaquetado
-        # Usamos _MEIPASS para obtener la ruta donde PyInstaller extrae los archivos
-        temp_dir = sys._MEIPASS
-        ffmpeg_path = os.path.join(temp_dir, 'ffmpeg.exe')
-    else:
-        # Si estamos en desarrollo, buscamos el binario en el directorio local
-        ffmpeg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ffmpeg_bin', 'ffmpeg.exe')
-    
-    return ffmpeg_path
+import sys
+import traceback
 
+def log_exception(exc_type, exc_value, exc_traceback):
+    with open("error_log.txt", "w", encoding="utf-8") as f:
+        traceback.print_exception(exc_type, exc_value, exc_traceback, file=f)
 
-# Llamamos a la función para obtener la ruta de ffmpeg.exe
-ffmpeg_path = get_ffmpeg_path()
-
-if os.path.exists(ffmpeg_path):
-    print(f"FFmpeg encontrado en: {ffmpeg_path}")
-else:
-    print("No se encontró ffmpeg.exe.")
-
-def check_ffmpeg():
-    ffmpeg_path = get_ffmpeg_path()
-    print(f"Buscando ffmpeg.exe en: {ffmpeg_path}")
-    if os.path.exists(ffmpeg_path):
-        print(f"FFmpeg encontrado en: {ffmpeg_path}")
-    else:
-        print(f"No se encontró ffmpeg.exe en: {ffmpeg_path}")
+sys.excepthook = log_exception
 
 
 def update_generate_button_position():

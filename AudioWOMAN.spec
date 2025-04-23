@@ -4,7 +4,7 @@
 a = Analysis(
     ['AudioWOMAN.py'],
     pathex=[],
-    binaries=[('C:\\Users\\perfe\\Desktop\\AMANDINE\\AudioWOMAN\\ffmpeg_bin\\ffmpeg.exe', 'ffmpeg_bin')],
+    binaries=[('ffmpeg_bin/ffmpeg.exe', 'ffmpeg_bin')],
     datas=[],
     hiddenimports=['pymediainfo'],
     hookspath=[],

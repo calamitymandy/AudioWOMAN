@@ -30,14 +30,24 @@ def browse_files_Audit(analyze_files_entry, count_label_audit, missing_files_tex
 
 ###################### LUFS ######################
 
+#def get_ffmpeg_path():
+#    """Detect platform and return the correct ffmpeg binary path."""
+#    if sys.platform.startswith("win"):
+#        return os.path.join("ffmpeg_bin", "ffmpeg.exe")
+#    elif sys.platform.startswith("darwin"):
+#        return os.path.join("ffmpeg_bin", "ffmpeg")
+#    else:
+#        raise EnvironmentError("Unsupported OS")
+
 def get_ffmpeg_path():
-    """Detect platform and return the correct ffmpeg binary path."""
-    if sys.platform.startswith("win"):
-        return os.path.join("ffmpeg_bin", "ffmpeg.exe")
-    elif sys.platform.startswith("darwin"):
-        return os.path.join("ffmpeg_bin", "ffmpeg")
+    if getattr(sys, 'frozen', False):
+        # Si está congelado por PyInstaller
+        ffmpeg_path = os.path.join(sys._MEIPASS, 'ffmpeg_bin', 'ffmpeg.exe')
     else:
-        raise EnvironmentError("Unsupported OS")
+        # En desarrollo (sin empaquetar)
+        ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg_bin', 'ffmpeg.exe')
+    
+    return ffmpeg_path
 
 def analyze_file(file_path):
     """Run ffmpeg loudnorm filter and return LUFS and True Peak."""
@@ -50,7 +60,20 @@ def analyze_file(file_path):
         "-f", "null", "-"
     ]
 
-    result = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL, text=True, check=True)
+    startupinfo = None
+    if sys.platform == "win32":
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+    result = subprocess.run(
+    cmd,
+    stderr=subprocess.PIPE,
+    stdout=subprocess.DEVNULL,
+    text=True,
+    check=True,
+    startupinfo=startupinfo  # <-- esto evita que aparezca la consola
+)
+
     stderr = result.stderr
 
     # Parse Integrated loudness (I) and True Peak (TP)
