@@ -1,25 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
-import sys
-import os
-import shutil
-
 
 from utils import set_placeholder, update_id_column_label, update_textbox_label
 from modify_and_clear import clear_all, apply_truncation, apply_replace
 from create_and_generate import generate_paths, add_column, remove_column, copy_paths
 from rename_files import browse_files, apply_rename
 from file_audit_n_media_info import perform_file_audit, export_audit_results, browse_files_Audit, apply_mediainfo, check_lufs
-
-import sys
-import traceback
-
-def log_exception(exc_type, exc_value, exc_traceback):
-    with open("error_log.txt", "w", encoding="utf-8") as f:
-        traceback.print_exception(exc_type, exc_value, exc_traceback, file=f)
-
-sys.excepthook = log_exception
-
 
 def update_generate_button_position():
     """Update the position of the Generate Paths button."""
