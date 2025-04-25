@@ -42,12 +42,19 @@ def browse_files_Audit(analyze_files_entry, count_label_audit, missing_files_tex
 def get_ffmpeg_path():
     if getattr(sys, 'frozen', False):
         # Si está congelado por PyInstaller
-        ffmpeg_path = os.path.join(sys._MEIPASS, 'ffmpeg_bin', 'ffmpeg.exe')
+        if sys.platform == "darwin":
+            ffmpeg_path = os.path.join(sys._MEIPASS, 'ffmpeg_bin', 'ffmpeg')
+        else:
+            ffmpeg_path = os.path.join(sys._MEIPASS, 'ffmpeg_bin', 'ffmpeg.exe')
     else:
         # En desarrollo (sin empaquetar)
-        ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg_bin', 'ffmpeg.exe')
+        if sys.platform == "darwin":
+            ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg_bin', 'ffmpeg')
+        else:
+            ffmpeg_path = os.path.join(os.path.dirname(__file__), 'ffmpeg_bin', 'ffmpeg.exe')
     
     return ffmpeg_path
+
 
 def analyze_file(file_path):
     """Run ffmpeg loudnorm filter and return LUFS and True Peak."""
@@ -61,31 +68,29 @@ def analyze_file(file_path):
     ]
 
     startupinfo = None
+    kwargs = {
+        "stderr": subprocess.PIPE,
+        "stdout": subprocess.DEVNULL,
+        "text": True,
+        "check": True,
+    }
+
     if sys.platform == "win32":
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        kwargs["startupinfo"] = startupinfo
 
-    result = subprocess.run(
-    cmd,
-    stderr=subprocess.PIPE,
-    stdout=subprocess.DEVNULL,
-    text=True,
-    check=True,
-    startupinfo=startupinfo  # <-- esto evita que aparezca la consola
-)
-
+    result = subprocess.run(cmd, **kwargs)
     stderr = result.stderr
 
-    # Parse Integrated loudness (I) and True Peak (TP)
+    # Parse LUFS and TP
     integrated = None
     true_peak = None
     for line in stderr.splitlines():
         if "Input Integrated:" in line:
             integrated = float(line.split(":")[1].strip().replace("LUFS", "").strip())
         if "Input True Peak:" in line:
-            true_peak_str = line.split(":")[1].strip()
-            true_peak_str = true_peak_str.replace("dB", "").replace("TP", "").strip()  # Clean extra characters
-            
+            true_peak_str = line.split(":")[1].strip().replace("dB", "").replace("TP", "").strip()
             try:
                 true_peak = float(true_peak_str)
             except ValueError:

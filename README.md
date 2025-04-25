@@ -3,12 +3,16 @@
 ## **Actualize .exe:**
 * *OLD* pyinstaller --onefile --noconsole .\AudioWOMAN.py
 * *OLD* pyinstaller --onefile --windowed --hidden-import pymediainfo --name "AudioWOMAN" AudioWOMAN.py
+
 * *OK* pyinstaller --onefile --windowed --hidden-import pymediainfo --add-binary "ffmpeg_bin/ffmpeg.exe;ffmpeg_bin" --name "AudioWOMAN" AudioWOMAN.py
 
 ## **Actualize .app & .dmg:**
 * *OLD* pyinstaller --onefile --noconsole --windowed --name "AudioWOMAN" AudioWOMAN.py
-* *OK* pyinstaller --onefile --windowed --hidden-import=pymediainfo AudioWOMAN.py
+* *OLD* pyinstaller --onefile --windowed --hidden-import=pymediainfo AudioWOMAN.py
+
+* *OK* pyinstaller AudioWOMAN.spec
 * dmgbuild -s settings.py "AudioWOMAN" dist/AudioWOMAN.dmg
+
 
 ------------------------------------------------------------------------
 
