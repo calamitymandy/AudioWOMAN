@@ -1,3 +1,5 @@
+from email.mime import message
+from logging import root
 import os
 import sys
 import subprocess
@@ -229,6 +231,10 @@ def apply_mediainfo(folder_path, button):
     reference_values = None
     mismatched_files = []
 
+    # For file size
+    file_sizes_kib = []
+    small_files = []  # < 20 KiB
+
     # Iterate through all audio files
     for root, _, files in os.walk(folder_path):
         for file in files:
@@ -237,7 +243,16 @@ def apply_mediainfo(folder_path, button):
                 continue
 
             file_path = os.path.join(root, file)
+
+            # File size (KiB)
+            size_kib = os.path.getsize(file_path) / 1024
+            file_sizes_kib.append(size_kib)
+
+            if size_kib < 20:
+                small_files.append(file)
+
             media_info = MediaInfo.parse(file_path)
+
             
             for track in media_info.tracks:
                 if track.track_type == "Audio":
@@ -259,32 +274,57 @@ def apply_mediainfo(folder_path, button):
     if not reference_values:
         messagebox.showerror("Error", "No valid audio files found.")
         return
+    
+    min_size = min(file_sizes_kib)
+    max_size = max(file_sizes_kib)
 
+    size_message = (
+        f"\n\nFile sizes:\n"
+        f"  Min: {min_size:.2f} KiB\n"
+        f"  Max: {max_size:.2f} KiB"
+    )
+
+    if small_files:
+        size_message += "\n\nFiles below 20 KiB:\n"
+        size_message += "\n".join(f"{f}" for f in small_files)
+    else:
+        size_message += "\n\nFiles below 20 KiB:\n  None"
+
+    # --- Construir mensaje final ---
     if mismatched_files:
         message = "Mismatched Files:\n\n"
         message += "\n".join(
             [f"{file} -> {sr} KHz, {bd} bits, {ch} channels"
-             for file, sr, bd, ch in mismatched_files]
+            for file, sr, bd, ch in mismatched_files]
         )
-
-        # ✅ Copy to clipboard
-        root = button.winfo_toplevel()
-        root.clipboard_clear()
-        root.clipboard_append(message)
-        root.update()
-
-        # ✅ Ask if user wants to save the results
-        save_choice = messagebox.askyesno("Media Info - Mismatches", 
-                                          message + "\n\nCopy to clipboard ✅\nWould you like to save the report?")
-        if save_choice:
-            save_path = filedialog.asksaveasfilename(defaultextension=".txt",
-                                                     filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
-                                                     title="Save Mismatched Files Report")
-            if save_path:
-                with open(save_path, "w", encoding="utf-8") as file:
-                    file.write(message)
-
+        title = "Media Info - Mismatches"
     else:
         sr, bd, ch = reference_values
-        messagebox.showinfo("Media Info", f"All files are {sr} KHz, {bd} bits, and {ch} channels.")
+        message = f"All files are {sr} KHz, {bd} bits, and {ch} channels."
+        title = "Media Info"
+
+    message += size_message
+
+    # --- Copiar siempre al portapapeles ---
+    root = button.winfo_toplevel()
+    root.clipboard_clear()
+    root.clipboard_append(message)
+    root.update()
+
+    # --- Mostrar info + preguntar si guardar ---
+    save_choice = messagebox.askyesno(
+        title,
+        message + "\n\nCopy to clipboard ✅\nWould you like to save the report?"
+    )
+
+    if save_choice:
+        save_path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")],
+            title="Save Media Info Report"
+        )
+    if save_path:
+        with open(save_path, "w", encoding="utf-8") as file:
+            file.write(message)
+
 
