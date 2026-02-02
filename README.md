@@ -9,9 +9,15 @@
 ## **Actualize .app & .dmg:**
 * *OLD* pyinstaller --onefile --noconsole --windowed --name "AudioWOMAN" AudioWOMAN.py
 * *OLD* pyinstaller --onefile --windowed --hidden-import=pymediainfo AudioWOMAN.py
+* *OLD* pyinstaller AudioWOMAN.spec
 
-* *OK* pyinstaller AudioWOMAN.spec
+* *OK* pyinstaller --onefile --windowed \
+  --hidden-import pymediainfo \
+  --add-binary "ffmpeg_bin/ffmpeg:ffmpeg_bin" \
+  AudioWOMAN.py
 * dmgbuild -s settings.py "AudioWOMAN" dist/AudioWOMAN.dmg
+
+
 
 
 ------------------------------------------------------------------------
@@ -139,6 +145,17 @@ Copies all files from a selected folder to a new `_renamed` folder and renames t
 
 ---
 
+### **LUFS**
+
+🔹 **What it does:**
+Check min and max LUFS and true peak of files in a directory
+
+📌 Steps:
+1.	Select a folder containing audio files.
+2.	Click on button **"LUFS"**.
+3.	The program will check all files and show the result of the analysis.
+
+
 ### **File Audit**
 🔹 **What it does:**
 Compares filenames from the generated paths with actual files in a selected folder, identifying missing and extra files.
@@ -161,9 +178,10 @@ Checks all audio files in a selected directory for uniformity in sampling rate, 
 📌 Steps:
 1.	Select a folder containing audio files.
 2.	Click on button **"Media Info"**.
-3.	The program will check if all files have the same parameters.
-If discrepancies are found, a detailed report will be displayed and can be saved.
+3.	The program will check if all files have the same parameters. And then will check file sizes to
+detect empty audio files.
 
+If discrepancies or files under 20 KiB are found, a detailed report will be displayed and can be saved.
 
 ### **Clear All: Reset Everything**
 
