@@ -32,7 +32,7 @@ AudioWOMAN is a tool designed for efficient file path generation, modification, 
 
 The program includes tools to modify paths through truncation or text replacement before applying changes to actual files. 
 
-It also features an automated renaming system that organizes files into structured directories based on the generated paths, and 2 tools for analyzing data: file audit and media info.
+It also features an automated renaming system that organizes files into structured directories based on the generated paths, and 3 tools for analyzing data: file audit, path audit, and media info.
 
 
 ---
@@ -47,6 +47,7 @@ It also features an automated renaming system that organizes files into structur
 - **Text Replacement in Paths**: Quickly find and replace specific text within file paths.
 - **Automated File Renaming**: Copy files into a structured `_renamed` folder and rename them based on generated paths, preserving subdirectories when necessary.
 - **File Audit**: Compare filenames from a list with files in a selected folder, identifying missing and extra files.
+- **Path Audit**: Verify that each file exists at its exact expected relative path (filename + directory structure) within a selected folder.
 - **Media Info**: Checks all audio files in a selected directory for uniformity in sampling rate, bit depth, and number of channels.
 - **Error Handling**: Built-in warnings and error messages guide users through column mismatches or invalid inputs.
 
@@ -155,19 +156,6 @@ Check min and max LUFS and true peak of files in a directory
 2.	Click on button **"LUFS"**.
 3.	The program will check all files and show the result of the analysis.
 
-
-### **File Audit**
-🔹 **What it does:**
-Compares filenames from the generated paths with actual files in a selected folder, identifying missing and extra files.
-
-📌 Steps:
-1.	Put the list of filenames in result textbox (copy/paste it or generate it)
-⚠ **Important:** Ensure the list of filenames contains the exact name of the files with the extension (e.g. “name_of_the_audio_file.wav”)
-2.	Select a folder to analyze.
-3.	Click on button **"File Audit"**.
-4.	The program will compare the generated paths with actual filenames and display missing and extra files.
-You can export the results as a text files.
-
 ---
 
 ### **Media Info**
@@ -182,6 +170,48 @@ Checks all audio files in a selected directory for uniformity in sampling rate, 
 detect empty audio files.
 
 If discrepancies or files under 20 KiB are found, a detailed report will be displayed and can be saved.
+
+---
+
+### **File Audit**
+🔹 **What it does:**
+Compares filenames from the generated paths with actual files in a selected folder, identifying missing and extra files. Only the filename is checked — directory structure is ignored.
+
+📌 Steps:
+1.	Put the list of filenames in result textbox (copy/paste it or generate it)
+⚠ **Important:** Ensure the list of filenames contains the exact name of the files with the extension (e.g. “name_of_the_audio_file.wav”)
+2.	Select a folder to analyze.
+3.	Click on button **"File Audit"**.
+4.	The program will compare the generated paths with actual filenames and display missing and extra files.
+You can export the results as text files.
+5. If there are .DS_Store files in your folder, you can delete them using the button **"Delete .DS_Store"** (next to "See extra files").
+
+---
+
+### **Path Audit**
+
+🔹 **What it does:**
+Verifies that each file exists at its exact expected relative path within a selected folder — checking both the filename and the directory structure.
+
+📌 Steps:
+1.	Put the list of relative paths in the result textbox (copy/paste or generate them).
+
+Example paths:
+```
+Batch4\NHM_Adult_Citizen_2\frFR_00612A_B4_S03_Sq03_file.wav
+Single lines\Olivier Valiente\Tony Stark\17737_Tony Stark_FR.wav
+_RUBY_FIX\frFR_25295A_S24_file.wav
+```
+⚠ **Important:** Paths must be relative to the selected folder (not absolute). Both `\` and `/` separators are accepted.
+
+2.	Select the folder to analyze.
+3.	Click on button **"PATH Audit"**.
+4.	The program will check each path and report:
+   - **Not found**: file doesn’t exist anywhere in the folder.
+   - **Wrong location**: file exists but is in a different subdirectory than expected.
+   - **Extra files**: files present in the folder that were not in the expected list.
+
+---
 
 ### **Clear All: Reset Everything**
 

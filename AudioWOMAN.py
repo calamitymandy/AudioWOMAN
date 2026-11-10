@@ -5,7 +5,7 @@ from utils import set_placeholder, update_id_column_label, update_textbox_label
 from modify_and_clear import clear_all, apply_truncation, apply_replace
 from create_and_generate import generate_paths, add_column, remove_column, copy_paths
 from rename_files import browse_files, apply_rename
-from file_audit_n_media_info import perform_file_audit, export_audit_results, browse_files_Audit, apply_mediainfo, check_lufs
+from file_audit_n_media_info import perform_file_audit, perform_path_audit, export_audit_results, browse_files_Audit, apply_mediainfo, check_lufs, delete_ds_store
 
 def update_generate_button_position():
     """Update the position of the Generate Paths button."""
@@ -461,22 +461,32 @@ mediainfo_button = tk.Button(
 )
 mediainfo_button.grid(row=2, column=3, padx=5, pady=5, sticky="sew")
 
-# Button File Audit
+# Button Filenames Audit
 fileaudit_button = tk.Button(
     analyze_frame,
-    text="File Audit",
+    text="FILE Audit",
     bg="#f07868",
     highlightbackground="#e7d3b0",
     command=lambda: perform_file_audit(result_textbox, analyze_files_entry.get(), missing_files_textbox, extra_files_textbox),
 )
 fileaudit_button.grid(row=3, column=3, padx=5, pady=5, sticky="sew")
 
+# Button PATH Audit
+pathaudit_button = tk.Button(
+    analyze_frame,
+    text="PATH Audit",
+    bg="#f07868",
+    highlightbackground="#e7d3b0",
+    command=lambda: perform_path_audit(result_textbox, analyze_files_entry.get(), missing_files_textbox, extra_files_textbox),
+)
+pathaudit_button.grid(row=4, column=3, padx=5, pady=5, sticky="sew")
+
 # Frames for Textboxes
 missing_files_frame = tk.Frame(analyze_frame, bg="#e7d3b0")
-missing_files_frame.grid(row=4, column=0, columnspan=2, padx=5, pady=(30, 5), sticky="nsew")
+missing_files_frame.grid(row=5, column=0, columnspan=2, padx=5, pady=(30, 5), sticky="nsew")
 
 extra_files_frame = tk.Frame(analyze_frame, bg="#e7d3b0")
-extra_files_frame.grid(row=4, column=2, columnspan=2, padx=5, pady=(30, 5), sticky="nsew")
+extra_files_frame.grid(row=5, column=2, columnspan=2, padx=5, pady=(30, 5), sticky="nsew")
 
 # Labels for Missing and Extra Files
 missing_files_label = tk.Label(missing_files_frame, text="Missing files", bg="#e7d3b0")
@@ -503,25 +513,47 @@ extra_files_scrollbar.grid(row=1, column=1, pady=5, sticky="ns")
 
 extra_files_textbox.config(yscrollcommand=extra_files_scrollbar.set)
 
+# Buttons sub-frame (matches extra files block structure)
+missing_buttons_frame = tk.Frame(missing_files_frame, bg="#e7d3b0")
+missing_buttons_frame.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+missing_buttons_frame.grid_columnconfigure(0, weight=1)
+missing_buttons_frame.grid_columnconfigure(1, weight=1)
+
 # Open Missing files button
 missing_button = tk.Button(
-    missing_files_frame,
+    missing_buttons_frame,
     text="See Missing Files",
     bg="#f07868",
     highlightbackground="#e7d3b0",
     command=lambda: export_audit_results(missing_files_textbox, missing=True),
 )
-missing_button.grid(row=2, column=0, columnspan=2, padx=100, pady=5, sticky="nsew")
+missing_button.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+
+# Buttons sub-frame (spans both columns so the textbox width is preserved)
+extra_buttons_frame = tk.Frame(extra_files_frame, bg="#e7d3b0")
+extra_buttons_frame.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+extra_buttons_frame.grid_columnconfigure(0, weight=1)
+extra_buttons_frame.grid_columnconfigure(1, weight=1)
 
 # Open extra files button
 extra_button = tk.Button(
-    extra_files_frame,
+    extra_buttons_frame,
     text="See extra files",
     bg="#f07868",
     highlightbackground="#e7d3b0",
     command=lambda: export_audit_results(extra_files_textbox, missing=False),
 )
-extra_button.grid(row=2, column=0, columnspan=2, padx=100, pady=5, sticky="nsew")
+extra_button.grid(row=0, column=0, padx=5, pady=5, sticky="nsew")
+
+# Delete .DS_Store button
+delete_ds_store_button = tk.Button(
+    extra_buttons_frame,
+    text="Delete .DS_Store",
+    bg="#f07868",
+    highlightbackground="#e7d3b0",
+    command=lambda: delete_ds_store(analyze_files_entry.get()),
+)
+delete_ds_store_button.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
 
 # Make frames expandable
 missing_files_frame.grid_rowconfigure(0, weight=1)

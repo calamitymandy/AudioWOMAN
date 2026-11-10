@@ -4,7 +4,7 @@
 a = Analysis(
     ['AudioWOMAN.py'],
     pathex=[],
-    binaries=[('ffmpeg_bin/ffmpeg', 'ffmpeg_bin')],
+    binaries=[('ffmpeg_bin/ffmpeg.exe', 'ffmpeg_bin')],
     datas=[],
     hiddenimports=['pymediainfo'],
     hookspath=[],
@@ -35,10 +35,4 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-)
-app = BUNDLE(
-    exe,
-    name='AudioWOMAN.app',
-    icon=None,
-    bundle_identifier=None,
 )

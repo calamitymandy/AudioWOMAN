@@ -145,6 +145,80 @@ def check_lufs(folder_path, button):
 
 
 
+###################### PATH AUDIT ######################
+def get_paths_from_textbox(textbox):
+    """Extract paths from the result_textbox, normalizing separators."""
+    lines = textbox.get("1.0", tk.END).strip().split("\n")
+    return [os.path.normpath(line.strip()) for line in lines if line.strip()]
+
+def get_relative_paths_from_folder(folder_path):
+    """Build a set of all relative paths (from folder_path root) and a dict of filename -> [relative_paths]."""
+    relative_paths = set()
+    filename_to_relpaths = {}  # filename -> list of relative paths where it exists
+    for root, _, files in os.walk(folder_path):
+        for file in files:
+            abs_path = os.path.join(root, file)
+            rel_path = os.path.normpath(os.path.relpath(abs_path, folder_path))
+            relative_paths.add(rel_path)
+            filename_to_relpaths.setdefault(file, []).append(rel_path)
+    return relative_paths, filename_to_relpaths
+
+def perform_path_audit(result_textbox, folder_path, missing_textbox, extra_textbox):
+    """Check that each path in result_textbox exists at the exact relative location in folder_path."""
+    if not folder_path or not os.path.isdir(folder_path):
+        messagebox.showerror("Error", "No valid folder selected. Please select a folder first.")
+        return
+
+    expected_paths = get_paths_from_textbox(result_textbox)
+    if not expected_paths:
+        messagebox.showerror("Error", "No paths found in the result textbox.")
+        return
+
+    relative_paths, filename_to_relpaths = get_relative_paths_from_folder(folder_path)
+
+    missing = []       # expected but not found at the right location
+    wrong_location = []  # file exists but in a different directory
+
+    for expected in expected_paths:
+        if expected in relative_paths:
+            continue  # ✅ correct path and location
+        # File not found at expected path — check if the filename exists elsewhere
+        filename = os.path.basename(expected)
+        if filename in filename_to_relpaths:
+            actual_locations = filename_to_relpaths[filename]
+            wrong_location.append(
+                f"{expected}\n  → found at: {', '.join(actual_locations)}"
+            )
+        else:
+            missing.append(expected)
+
+    # Extra files: in folder but not expected at any path
+    expected_set = set(expected_paths)
+    extra = sorted(relative_paths - expected_set)
+
+    missing_textbox.delete("1.0", tk.END)
+    extra_textbox.delete("1.0", tk.END)
+
+    # Missing column: truly missing + wrong location
+    missing_lines = []
+    if missing:
+        missing_lines.append("--- NOT FOUND ---")
+        missing_lines.extend(missing)
+    if wrong_location:
+        missing_lines.append("\n--- WRONG LOCATION ---")
+        missing_lines.extend(wrong_location)
+
+    if missing_lines:
+        missing_textbox.insert(tk.END, "\n".join(missing_lines))
+    else:
+        missing_textbox.insert(tk.END, "All paths are correct ✅")
+
+    if extra:
+        extra_textbox.insert(tk.END, "\n".join(extra))
+    else:
+        extra_textbox.insert(tk.END, "No extra files")
+
+
 ###################### FILE AUDIT ######################
 def get_filenames_from_textbox(textbox):
     """Extract filenames from the result_textbox."""
@@ -212,6 +286,34 @@ def export_audit_results(textbox, missing):
         subprocess.Popen(["open", "-a", "TextEdit", temp_file_path])  # Open in TextEdit
     else:
         subprocess.Popen(["xdg-open", temp_file_path])  # Linux (for compatibility)
+
+
+###################### DELETE .DS_STORE ######################
+def delete_ds_store(folder_path):
+    """Delete all .DS_Store files in the given folder and its subdirectories."""
+    if not folder_path or not os.path.isdir(folder_path):
+        messagebox.showerror("Error", "No valid folder selected. Please select a folder first.")
+        return
+
+    deleted = []
+    for root, _, files in os.walk(folder_path):
+        for file in files:
+            if file == ".DS_Store":
+                file_path = os.path.join(root, file)
+                try:
+                    os.remove(file_path)
+                    deleted.append(file_path)
+                except Exception as e:
+                    messagebox.showerror("Error", f"Could not delete {file_path}:\n{e}")
+                    return
+
+    if deleted:
+        messagebox.showinfo(
+            "Done",
+            f"Deleted {len(deleted)} .DS_Store file(s)."
+        )
+    else:
+        messagebox.showinfo("Done", "No .DS_Store files found.")
 
 
 ###################### MEDIA INFO ######################
