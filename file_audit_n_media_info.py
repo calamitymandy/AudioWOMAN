@@ -147,9 +147,18 @@ def check_lufs(folder_path, button):
 
 ###################### PATH AUDIT ######################
 def get_paths_from_textbox(textbox):
-    """Extract paths from the result_textbox, normalizing separators."""
+    """Extract paths from the result_textbox, normalizing separators.
+    Handles both / and \\ separators regardless of OS."""
     lines = textbox.get("1.0", tk.END).strip().split("\n")
-    return [os.path.normpath(line.strip()) for line in lines if line.strip()]
+    normalized = []
+    for line in lines:
+        line = line.strip()
+        if line:
+            # Replace backslashes with forward slashes first so normpath
+            # works correctly on macOS (which treats \ as a valid filename char)
+            line = line.replace("\\", "/")
+            normalized.append(os.path.normpath(line))
+    return normalized
 
 def get_relative_paths_from_folder(folder_path):
     """Build a set of all relative paths (from folder_path root) and a dict of filename -> [relative_paths]."""

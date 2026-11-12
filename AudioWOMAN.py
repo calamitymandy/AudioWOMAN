@@ -246,6 +246,18 @@ result_scrollbar.grid(row=0, column=1, sticky="ns")
 # Link the scrollbar to the Text widget
 result_textbox.config(yscrollcommand=result_scrollbar.set)
 
+# Fix Mac Excel paste: strip \r to avoid empty lines between entries
+def on_paste(event):
+    try:
+        text = result_textbox.clipboard_get()
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
+        result_textbox.insert(tk.INSERT, text)
+    except tk.TclError:
+        pass
+    return "break"  # prevent default paste behaviour
+
+result_textbox.bind("<<Paste>>", on_paste)
+
 # Configure the row and column weights for the frame
 result_frame.grid_rowconfigure(0, weight=1)
 result_frame.grid_columnconfigure(0, weight=1)
